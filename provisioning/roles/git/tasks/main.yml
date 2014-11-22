@@ -1,0 +1,19 @@
+---
+
+- name: install git
+  apt: pkg=git state=latest update_cache=yes
+
+- name: set git global user name
+  shell: git config --global user.name "{{ git_user.name }}"
+  sudo: no
+
+- name: set git global user email
+  shell: git config --global user.email "{{ git_user.email }}"
+  sudo: no
+
+- name: set git system user name
+  shell: git config --system user.name "{{ git_user.name }}"
+
+- name: set git system user email
+  shell: git config --system user.email "{{ git_user.email }}"
+

@@ -1,0 +1,8 @@
+- name: Apache, load virtualhost
+  template: src=sites-available/{{ template }} dest=/etc/apache2/sites-available/{{ vhost }}.conf
+  notify: apache2-restart
+
+- name: Apache, enable virtualhost
+  file: src=/etc/apache2/sites-available/{{ vhost }}.conf dest=/etc/apache2/sites-enabled/{{ vhost }}.conf state=link force=yes
+  notify: apache2-restart
+

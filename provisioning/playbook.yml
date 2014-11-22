@@ -1,0 +1,29 @@
+---
+
+- hosts: all
+  sudo: yes
+  roles:
+    - system
+    - ntp
+    - ruby
+    - php
+    - composer
+    - apache
+    - mysql
+    - git
+
+  vars:
+    dbname: temp
+    host: temp
+    document_root: "/var/www/{{ host }}"
+    mysql_db:
+        - name: "{{ dbname }}"
+    mysql_users:
+        - name: "{{ dbname }}"
+          pass: "{{ dbname }}"
+          priv: "{{ dbname }}.*:ALL"
+          host: "%"
+    git_user:
+        email: yngwie.chang@gmail.com
+        name: Hao Chang
+

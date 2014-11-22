@@ -1,0 +1,5 @@
+---
+
+- name: hostsfile
+  template: src=hosts dest=/etc/hosts
+

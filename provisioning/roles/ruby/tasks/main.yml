@@ -1,0 +1,8 @@
+---
+
+- name: install ruby && compass
+  apt: pkg={{ item }} state=latest update_cache=yes
+  with_items:
+    - ruby
+    - ruby-compass
+
