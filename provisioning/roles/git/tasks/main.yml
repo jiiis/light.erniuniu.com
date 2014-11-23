@@ -16,4 +16,3 @@
 
 - name: set git system user email
   shell: git config --system user.email "{{ git_user.email }}"
-

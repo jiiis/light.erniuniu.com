@@ -11,4 +11,3 @@
 - name: make composer executable
   shell: chmod a+x /usr/local/bin/composer
   tags: composer
-

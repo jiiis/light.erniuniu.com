@@ -13,17 +13,16 @@
     - git
 
   vars:
-    dbname: temp
-    host: temp
+    dbname: erniuniu
+    host: light.erniuniu.com
     document_root: "/var/www/{{ host }}"
     mysql_db:
-        - name: "{{ dbname }}"
+      - name: "{{ dbname }}"
     mysql_users:
-        - name: "{{ dbname }}"
-          pass: "{{ dbname }}"
-          priv: "{{ dbname }}.*:ALL"
-          host: "%"
+      - name: "{{ dbname }}"
+        pass: "{{ dbname }}"
+        priv: "{{ dbname }}.*:ALL"
+        host: "%"
     git_user:
         email: yngwie.chang@gmail.com
         name: Hao Chang
-

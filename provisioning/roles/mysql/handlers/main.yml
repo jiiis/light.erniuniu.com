@@ -2,4 +2,3 @@
 
 - name: mysql_restart
   service: name=mysql state=restarted
-

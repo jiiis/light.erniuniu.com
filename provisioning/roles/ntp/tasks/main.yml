@@ -1,8 +1,7 @@
 ---
 
 - name: install ntp
-  apt: pkg=ntp state=installed
+  apt: pkg=ntp state=latest
 
 - name: update time
   command: sudo service ntp stop && sudo ntpd -gq && sudo service ntp start
-
