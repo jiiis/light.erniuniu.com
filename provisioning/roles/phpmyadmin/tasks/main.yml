@@ -1,0 +1,10 @@
+---
+
+- name: install phpmyadmin
+  apt: pkg=phpmyadmin state=latest update_cache=yes cache_valid_time=60
+
+- name: include phpmyadmin configuration
+  lineinfile: dest=/etc/apache2/apache2.conf regexp="^Include /etc/phpmyadmin/apache.conf" line="Include /etc/phpmyadmin/apache.conf" state=present
+
+- name: restart apache2
+  service: name=apache2 state=restarted

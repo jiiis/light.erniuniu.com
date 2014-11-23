@@ -10,6 +10,7 @@
     - composer
     - apache
     - mysql
+    - phpmyadmin
     - ssh
     - git
 
