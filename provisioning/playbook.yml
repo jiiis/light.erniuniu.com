@@ -10,6 +10,7 @@
     - composer
     - apache
     - mysql
+    - ssh
     - git
 
   vars:
