@@ -15,9 +15,9 @@
     - git
 
   vars:
-    dbname: erniuniu
     host: light.erniuniu.com
     document_root: "/var/www/{{ host }}"
+    dbname: erniuniu
     mysql_db:
       - name: "{{ dbname }}"
     mysql_users:

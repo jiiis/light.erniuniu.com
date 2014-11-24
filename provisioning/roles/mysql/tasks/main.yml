@@ -11,11 +11,32 @@
   lineinfile: dest=/etc/mysql/my.cnf regexp="^bind-address" line="#bind-address = 127.0.0.1" state=present backrefs=yes backup=yes
   notify: mysql_restart
 
+- name: configure root user
+  mysql_user: name=root
+              password=root
+              host={{ item }}
+              check_implicit_admin=yes
+              priv="*.*:ALL,GRANT"
+              login_user=root
+              login_password=root
+  with_items:
+    - "{{ ansible_hostname }}"
+    - "{{ inventory_hostname }}"
+    - localhost
+    - 127.0.0.1
+    - ::1
+
 - name: remove test database
-  mysql_db: name=test state=absent
+  mysql_db: name=test
+            state=absent
+            login_user=root
+            login_password=root
 
 - name: create databases
-  mysql_db: name={{ item.name }} state=present
+  mysql_db: name={{ item.name }}
+            state=present
+            login_user=root
+            login_password=root
   with_items: mysql_db
 
 - name: create database users
@@ -24,4 +45,6 @@
               priv={{ item.priv | default("*.*:ALL") }}
               state=present
               host={{ item.host | default("localhost") }}
+              login_user=root
+              login_password=root
   with_items: mysql_users
