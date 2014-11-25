@@ -37,7 +37,7 @@
             state=present
             login_user=root
             login_password={{ mysql_root_password }}
-  with_items: "{{ mysql_databases }}"
+  with_items: mysql_databases
 
 - name: create database users
   mysql_user: name={{ item.name }}
@@ -47,4 +47,4 @@
               host={{ item.host | default("localhost") }}
               login_user=root
               login_password=root
-  with_items: "{{ mysql_users }}"
+  with_items: mysql_users
