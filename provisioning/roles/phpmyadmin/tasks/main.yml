@@ -6,5 +6,8 @@
 - name: include phpmyadmin configuration
   lineinfile: dest=/etc/apache2/apache2.conf regexp="^Include /etc/phpmyadmin/apache.conf" line="Include /etc/phpmyadmin/apache.conf" state=present
 
+- name: enable php5 mcrypt module
+  shell: php5enmod mcrypt
+
 - name: restart apache2
   service: name=apache2 state=restarted
