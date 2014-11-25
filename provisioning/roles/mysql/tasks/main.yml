@@ -13,12 +13,12 @@
 
 - name: configure root user
   mysql_user: name=root
-              password=root
+              password={{ mysql_root_password }}
               host={{ item }}
               check_implicit_admin=yes
               priv="*.*:ALL,GRANT"
               login_user=root
-              login_password=root
+              login_password={{ mysql_root_password }}
   with_items:
     - "{{ ansible_hostname }}"
     - "{{ inventory_hostname }}"
@@ -30,13 +30,13 @@
   mysql_db: name=test
             state=absent
             login_user=root
-            login_password=root
+            login_password={{ mysql_root_password }}
 
 - name: create databases
   mysql_db: name={{ item.name }}
             state=present
             login_user=root
-            login_password=root
+            login_password={{ mysql_root_password }}
   with_items: "{{ mysql_databases }}"
 
 - name: create database users

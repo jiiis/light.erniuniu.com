@@ -17,6 +17,7 @@
   vars:
     host: light.erniuniu.com
     dbname: erniuniu
+    mysql_root_password: root
     mysql_databases:
       - name: "{{ dbname }}"
     mysql_users:
