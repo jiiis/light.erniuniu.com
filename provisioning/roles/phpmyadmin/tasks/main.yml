@@ -1,10 +1,31 @@
 ---
 
 - name: install phpmyadmin
-  apt: pkg=phpmyadmin state=latest update_cache=yes cache_valid_time=60
+  apt: pkg=phpmyadmin state=present update_cache=yes cache_valid_time=60
 
 - name: include phpmyadmin configuration
   lineinfile: dest=/etc/apache2/apache2.conf regexp="^Include /etc/phpmyadmin/apache.conf" line="Include /etc/phpmyadmin/apache.conf" state=present
+
+- name: put create_tables.sql file
+  template: src=create_tables.sql dest=/home/vagrant/create_tables.sql
+
+- name: import create_tables.sql
+  shell: mysql -uroot -p{{ mysql_root_password }} < /home/vagrant/create_tables.sql
+
+- name: change user name for advanced features
+  lineinfile: dest=/etc/phpmyadmin/config-db.php regexp="dbuser=" line="$dbuser='{{ phpmyadmin_advanced_username }}';" state=present backrefs=yes
+
+- name: change user password for advanced features
+  lineinfile: dest=/etc/phpmyadmin/config-db.php regexp="dbpass=" line="$dbpass='{{ phpmyadmin_advanced_password }}';" state=present backrefs=yes
+
+- name: create mysql user for advanced features
+  mysql_user: name={{ phpmyadmin_advanced_username }}
+              password={{ phpmyadmin_advanced_password }}
+              priv="phpmyadmin.*:ALL"
+              state=present
+              host=localhost
+              login_user=root
+              login_password={{ mysql_root_password }}
 
 - name: enable php5 mcrypt module
   shell: php5enmod mcrypt
