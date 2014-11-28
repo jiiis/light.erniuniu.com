@@ -1,0 +1,41 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+
+<?php
+$title = "$ratesCat->name's rates";
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<p>
+    <a href="<?php echo $this->url('rates', array('action'=>'add','id' => $ratesCat->id,));?>">Add new rates</a>
+</p>
+
+<table class="table">
+<tr>
+    <th>id</th>
+    <th>information</th>
+    <th>price</th>
+    <th>&nbsp;</th>
+</tr>
+<?php foreach ($ratesList as $rates) : ?>
+<tr>
+    <td><?php echo $this->escapeHtml($rates->id);?></td>
+    <td><?php echo $this->escapeHtml($rates->info);?></td>
+    <td><?php echo $this->escapeHtml($rates->price);?></td>
+    <td>
+        <a href="<?php echo $this->url('rates',
+            array('action'=>'edit', 'id' => $rates->id));?>">Edit</a>
+        <a href="<?php echo $this->url('rates',
+            array('action'=>'delete', 'id' => $rates->id));?>">Delete</a>
+    </td>
+</tr>
+<?php endforeach; ?>
+</table>
+
+<?php ENDIF ?>

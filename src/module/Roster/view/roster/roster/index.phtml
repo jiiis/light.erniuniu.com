@@ -1,0 +1,117 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="/resources/demos/style.css" />
+
+<!--------------------------------------- Scroll to top ------------------------------------------->
+<script src = "/frontend/plugins/scrollToTop/scroll_to_top.js"></script>
+
+<script>
+	$(function(){
+		$(document).tooltip({
+			track: true,
+			show:{
+				effect: "size",
+				delay: 100,
+			},
+			hide:{
+				effect: "clip",
+				delay: 0,
+			},
+		});
+	})
+</script>
+
+<style type = "text/css">
+	#girl_roster_table tr td label{
+		float:left;
+		width:100px;
+	}
+	
+	tr.table_header th{
+		border: 0px;
+	}
+	
+/*	table.table td{
+		vertical-align: middle;
+	}*/
+</style>
+
+<script>
+	$(function(){
+		$(":checkbox").css("margin-right", "10px");
+		$("label").css("margin-right", "25px").css("width", "auto");
+	});
+</script>
+
+<?php
+$title = 'Roster Page Maintenance';
+$this->headTitle($title);
+?>
+
+
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+
+<div>
+	<table class = "table" id = "girl_roster_table">
+		<tr class = "table_header">
+			<th style = "width:7%;">photo</th>
+			<th style = "width:7%;">name</th>
+			<th style = "width:7%;">age</th>
+			<th style = "width:72%;">roster</th>
+			<th style = "width:7%;">save</th>
+		</tr>
+
+		<?php
+			foreach($allInfoArray as $singleInfoArray){
+				echo "<tr>";
+
+				echo "<td><img align = 'center' width = '40px' src = '".$singleInfoArray['girl_object']->thumb_url."'/></td>";
+				echo "<td>".$singleInfoArray['girl_object']->name."</td>";
+				echo "<td>".$singleInfoArray['girl_object']->age."</td>";
+
+				$form = $singleInfoArray['girl_form'];
+				$form->setAttribute('action', $this->url(
+   					'roster',
+   					array(
+       					'action' => 'editgirl',
+       					'id'     => $singleInfoArray['girl_id'],
+    				)
+				));
+				$form->prepare();
+
+				echo $this->form()->openTag($form);
+				
+				echo $this->formHidden($form->get('id'));
+				echo $this->formHidden($form->get('shop_id'));
+				echo $this->formHidden($form->get('name'));
+				echo $this->formHidden($form->get('is_new'));
+				echo $this->formHidden($form->get('star_text'));
+				echo $this->formHidden($form->get('age'));
+				echo $this->formHidden($form->get('description'));
+				echo $this->formHidden($form->get('email'));
+				echo $this->formHidden($form->get('phone'));
+				echo $this->formHidden($form->get('thumb_url'));
+				echo $this->formHidden($form->get('from_nation'));
+				echo $this->formHidden($form->get('order_num'));
+				echo $this->formHidden($form->get('is_active'));
+				echo $this->formHidden($form->get('can_be_active'));
+				
+				echo "<td>".$this->formElement($form->get('roster'))."</td>";
+				echo "<td>".$this->formSubmit($form->get('submit'))."</td>";
+
+				echo $this->form()->closeTag();
+				echo "</tr>";
+			}
+		?>
+	</table>
+</div>
+<?php ENDIF ?>

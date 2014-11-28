@@ -1,0 +1,1708 @@
+<!doctype html>
+
+<!-- this -->
+<link rel = "stylesheet" href = "/frontend/css/backend_rates.css" />
+
+<!-- jquery -->
+<script src = "http://code.jquery.com/jquery-1.9.1.js"></script>
+
+<!-- jquery ui -->
+<script src = "http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+<link rel = "stylesheet" href = "http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+
+<!-- scroll -->
+<script type="text/javascript" src="/frontend/plugins/SlimScroll/slimscroll.js"></script>
+
+<!-- scroll to top -->
+<script src = "/frontend/plugins/scrollToTop/scroll_to_top.js"></script>
+
+<!--block ui-->
+<script src = "/frontend/plugins/blockui/blockui.js"></script>
+
+<!------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------->
+
+<?php
+$title = 'Rates Page Maintenance';
+$this->headTitle($title);
+?>
+
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:10px;"></div>
+
+<!-------------------------------------------- Rate Categories -------------------------------------------------->
+
+<style>
+	img.update_icon{
+		position: relative;
+		margin-left: 15px;
+		margin-bottom: 10px;
+		width: 25px;
+		cursor: pointer;
+	}
+	
+	div.waiting div{
+		float: left;
+	}
+	
+	div.waiting div.loading{
+		width: 100px;
+		height: 70px;
+	}
+	
+	div.waiting div.please_wait{
+		margin-top: 10px;
+		margin-left: 0px;
+		width: 260px;
+		line-height: 25px;
+		font-size: 16px;
+	}
+	
+	div.loading img{
+		height: 70px;
+	}
+	
+	div.growlUI{
+		background: url(/frontend/images/cross_2.png) no-repeat 10px 0px;
+		min-width: 250px;
+	}
+
+	div.growlUI h4{
+		color: white;
+		padding: 0px 20px 0px 75px;
+		text-align: left;
+		font-size: 18px;
+		font-weight: normal;
+	}
+	
+	/******************************** slide **********************************/
+	
+	div.div_uptodate{
+		display: none;
+		width: 250px;
+		height: 26px;
+		line-height: 26px;
+		font-style: italic;
+		color: #b22222;
+		text-align: center;
+	/*	background-color: #b22222;*/
+		font-size: 18px;
+		border: 2px solid #b22222;
+		
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		
+		/*
+		-webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+		-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+		box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+		*/
+	}
+	
+	div.div_slider_2_con{
+		float: right;
+		margin-right: 135px;
+	}
+	
+	div#div_slider_1, div#div_slider_2{
+		display: inline-block;
+	}
+	
+	div#div_slider_1{
+		display: none;
+	}
+	
+	div#div_slider_2{
+		display: none;
+		margin-right: 200px;
+		position: absolute;
+		margin-top: 2px;
+	}
+	
+	div#well_update, div#well_update_2{
+		padding: 3px;
+		
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+		
+		border: 1px solid #aaa;
+		border: 1px solid #b22222;
+		overflow: hidden; 
+		
+		-webkit-user-select: none;
+		
+		width: 155px;
+	}
+	
+	div#well_update_2{
+		width: 107px;
+	}
+	
+	div#h2_update, div#h2_update_2{
+		/*
+		background: -moz-linear-gradient(left, #4d4d4d, 0.4, #4d4d4d, 0.5, white, 0.6, #4d4d4d, #4d4d4d); 
+		background: -webkit-gradient(linear,left top,right top,color-stop(0, #4d4d4d),color-stop(0.4, #4d4d4d),color-stop(0.5, white),color-stop(0.6, #4d4d4d),color-stop(1, #4d4d4d)); 
+		*/
+		
+		background: -moz-linear-gradient(left, #b22222, 0.4, #b22222, 0.5, white, 0.6, #b22222, #b22222); 
+		background: -webkit-gradient(linear,left top,right top,color-stop(0, #b22222),color-stop(0.4, #b22222),color-stop(0.5, white),color-stop(0.6, #b22222),color-stop(1, #b22222)); 
+		
+		-moz-background-clip: text;
+		-webkit-background-clip: text;
+
+		-webkit-animation: slidetounlock 2s infinite;
+
+		font-size: 14px;
+		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+		font-weight: normal;
+
+		padding: 0px;
+		margin: 0px;
+		width: 200%;
+		height: 20px;
+		line-height: 20px;
+		text-align: left;
+
+		-webkit-text-size-adjust: none;
+	}
+	
+	div#h2_update_2{
+		height: 13px;
+		line-height: 13px;
+		font-size: 9px;
+		
+		-webkit-animation: slidetounlock_2 2s infinite;
+	}
+	
+	div#well_update span#slider_icon_update, div#well_update_2 span#slider_icon_update_2{
+		display: inline-block;
+		padding: 2px 0px;
+		width: 40px;
+		height: 14px;
+		line-height: 14px;
+		text-align: center;
+		font-size: 14px;
+		border: 1px solid #aaa;
+		border: 1px solid #b22222;
+		vertical-align: center;
+		background: #fff;
+		cursor: move;
+		color: #b22222;
+	}
+	
+	div#well_update_2 span#slider_icon_update_2{
+		padding: 1px 0px;
+		height: 9px;
+		line-height: 9px;
+		font-size: 9px;
+		width: 30px;
+	}
+	
+	div#well_update span#slider_text_update, div#well_update_2 span#slider_text_update_2{
+	/*	display: inline-block;*/
+		height: 20px;
+		line-height: 20px;
+		width: 100px;
+		font-size: 14px;
+		color: #b22222;
+		
+		-moz-text-fill-color: transparent;
+		-webkit-text-fill-color: transparent;
+	}
+	
+	div#well_update_2 span#slider_text_update_2{
+		height: 13px;
+		line-height: 13px;
+		font-size: 9px;
+		width: 80px;
+	}
+	
+	@-webkit-keyframes slidetounlock{
+		0% {
+			background-position: -152px 0;
+		}
+		100%{
+			background-position: 152px 0;
+		}
+	}
+	
+	@-webkit-keyframes slidetounlock_2{
+		0% {
+			background-position: -105px 0;
+		}
+		100%{
+			background-position: 105px 0;
+		}
+	}
+</style>
+
+<!---------------------------------- slide to update ------------------------------------------>
+
+<script>
+	function show_update_slider(){
+		$("div.div_uptodate").hide('slide', 500, function(){
+			$("div#div_slider_1").show('slide', 500);
+		});
+	}
+	
+	function show_uptodate(){
+		$("div#div_slider_1").hide('slide', 500, function(){
+			$("div.div_uptodate").show('slide', 500);
+		});
+	}
+	
+	function check_trash_empty(){
+		if($("ul.ul_trash_list").find("li.li_cat_list").length == 0){
+			$("div#div_slider_2").hide("slide", 500);
+		}else{
+			$("div#div_slider_2").show("slide", 500);
+		}
+	}
+
+	$(function(){
+		window.setTimeout(function(){
+			// show uptodate
+			$("div.div_uptodate").show('slide', 500);
+			
+			// check empty
+			check_trash_empty();
+		}, 1000);
+	
+		// please wait...
+		function block_wait(){
+			$("div.waiting div.please_wait").html("We are updating rate information.<br />Please wait...");
+			$.blockUI({
+				message: $("div.waiting"),
+				css: {
+					width: '400px',
+					height: '70px',
+					border: 'none', 
+					padding: '15px', 
+					backgroundColor: '#000',
+					'-webkit-border-radius': '10px', 
+					'-moz-border-radius': '10px', 
+					opacity: .8, 
+					color: '#fff' 
+				}
+			});
+		}
+		
+		function block_growl(){
+			$("h4:first", $("div.growlUI")).text("You've successfully updated the rate information.");
+			$("h4:last", $("div.growlUI")).text("Have fun!");
+			$("div.growlUI").css("background", "url(/frontend/images/check_2.png) no-repeat 10px 0px");
+			
+			$.blockUI({
+				message: $("div.growlUI"), 
+				fadeIn: 700, 
+				fadeOut: 700, 
+				timeout: 3000, 
+				showOverlay: false,
+				centerY: false, 
+				css: { 
+					width: 'auto',
+					top: '50px', 
+					left: '', 
+					right: '10px', 
+					border: 'none', 
+					padding: '5px', 
+					backgroundColor: '#000', 
+					'-webkit-border-radius': '10px', 
+					'-moz-border-radius': '10px', 
+					opacity: .8, 
+					color: '#fff' 
+				} 
+			});
+		}
+	
+		$("#slider_icon_update").draggable({
+			axis: 'x',
+			containment: 'div#well_update',
+			revert: function(){
+				$("span#slider_text_update").fadeIn();
+				return true;
+			},
+			drag: function(event, ui) {
+				$("span#slider_text_update").fadeOut();
+			
+				if (ui.position.left > 150) {
+					
+				} else {
+					
+				}
+			},
+			stop: function(event, ui) {
+				if (ui.position.left < 111) { // chrome用113刚刚好，IE用111刚好
+					
+				}else{
+					show_uptodate();
+				
+					block_wait();
+		
+					var json_str = '';
+					var json_obj = null;
+					var cat_index = 1;
+					var cat_count = $("ul.ul_cat_list li.li_cat_list").length + $("ul.ul_trash_list li.li_cat_list").length;
+					
+					json_str += '{';
+					
+					$("li.li_cat_list").each(function(){
+						var $li_cat_list = $(this);
+						
+						if($li_cat_list.parent().hasClass("ul_cat_list_sample")){
+							return;
+						}
+						
+						var $ul_rate_list = $li_cat_list.find("ul.ul_rate_list");
+						var cat_name = $.trim($li_cat_list.find("div.div_cat_name span").text());
+						var json_str_cat = '';
+						var rate_index = 1;
+						var rate_count = $ul_rate_list.find("li").length;
+						
+						json_str_cat += '"cat_' + cat_index++ + '":{"cat_name":"' + cat_name + '","is_active":"';
+						if($li_cat_list.parent().hasClass("ul_cat_list")){
+							json_str_cat += '1';
+						}else if($li_cat_list.parent().hasClass("ul_trash_list")){
+							json_str_cat += '0';
+						}
+						json_str_cat += '","rate_list":{';
+						
+						$ul_rate_list.find("li").each(function(){
+							var $li_rate_list = $(this);
+							var rate_name = $.trim($li_rate_list.find("div.div_rate_name span").text());
+							var rate_price = $.trim($li_rate_list.find("div.div_rate_price span").text().replace(/^\$/gi, ''));
+							
+							json_str_cat += '"rate_' + rate_index++ + '":{"rate_name":"' + rate_name + '","rate_price":"' + rate_price + '"}';
+							
+							if(rate_index != rate_count + 1){
+								json_str_cat += ',';
+							}
+						});
+						
+						json_str_cat += '}}';
+						
+						if(cat_index != cat_count + 1){
+							json_str_cat += ',';
+						}
+						
+						json_str += json_str_cat;
+					});
+					
+					json_str += '}';
+					json_obj = $.parseJSON(json_str);
+					
+					//////////////////////////////////////////////////////////////////////////
+					
+					$.post(
+						"/ratescat/ajaxUpdate",
+						json_obj,
+						function(data){
+							if(data.status){
+								block_growl();
+							}
+						},
+						'json'
+					);
+				}
+			}
+		});
+	});
+</script>
+
+<!-------------------------------------------- empty ------------------------------------------>
+
+<script>
+	$(function(){
+		/*
+		$(":input#empty").click(function(e){
+			e.preventDefault();
+			
+			$("ul.ul_trash_list").html("");
+		});
+		*/
+		
+		$("#slider_icon_update_2").draggable({
+			axis: 'x',
+			containment: 'div#well_update_2',
+			revert: function(){
+				$("span#slider_text_update_2").fadeIn();
+				return true;
+			},
+			drag: function(event, ui) {
+				$("span#slider_text_update_2").fadeOut();
+			
+				if (ui.position.left > 150) {
+					
+				} else {
+					
+				}
+			},
+			stop: function(event, ui) {
+				if (ui.position.left < 75) { // IE用75刚好
+					
+				}else{
+					$("ul.ul_trash_list").find("li.li_cat_list").hide("explode", 1500, function(){
+					//	alert("update 9");
+						show_update_slider();
+					
+						$("ul.ul_trash_list").html("");
+						check_trash_empty();
+					});
+				}
+			}
+		});
+	});
+</script>
+
+<!---------------------------------- slide to update end ------------------------------------------>
+
+<h4 style = "height: 30px;">
+<!--Rates-->
+<!--	<img class = "update_icon" src = "/frontend/images/update_rates.png" />-->
+
+	<div id = "div_slider_1">
+		<div id = "well_update">
+			<div id = "h2_update">
+				<span id = "slider_icon_update">>>></span>
+				<span id = "slider_text_update">&nbsp;&nbsp;slide to update&nbsp;&nbsp;</span>
+			</div>
+		</div>
+	</div>
+	
+	<div class = "div_uptodate">
+		Rates are up to date!
+	</div>
+</h4>
+
+<div style="height:10px;"></div>
+
+<script>
+	var speed_show_hide = 500;
+	var speed_transformer_load = 500;
+	var speed_transformer = 300;
+	var style_transformer = 4;
+	var opacity_drag = 0.8;
+	
+	$(function(){
+	
+		/////////////////////////////////////////// initiation /////////////////////////////////////////////////
+		
+		$("*").disableSelection();
+		
+		cat_init();
+		rate_init();
+		scroll_init();
+		cat_trash_recycle_init($("div.trash_icon_cat"));
+		edit_cat_init($("ul.ul_cat_list li.li_cat_list"));
+		edit_rate_init($("ul.ul_rate_list li"), "rate_name");
+		edit_rate_init($("ul.ul_rate_list li"), "rate_price");
+		rate_trash_all_init();
+		trash_list_all_init();
+		
+		/////////////////////////////////////////// functions /////////////////////////////////////////////////
+		
+		function cat_init(){
+			// reorder the list of cats
+			$("ul.ul_cat_list")
+			.sortable({
+				revert: true,
+				handle: "div.div_cat_name",
+				opacity: opacity_drag,
+			/*	placeholder: {
+					element: function(currentItem) {
+						return $("<li class = 'placeholder_cat'></li>")[0];
+					},
+					update: function(container, p) {
+						return;
+					}
+				},*/
+				update: function(){
+				//	alert("update 1");
+					show_update_slider();
+				},
+				receive: function(event, ui){
+					$("li.ui-draggable ul", $(this))
+					.removeClass("ul_rate_list_temp")
+					.addClass("ul_rate_list")
+					.before("<div class = 'trash_icon_cat'><img src = '/frontend/images/rates_trash.png' /></div>");
+					
+					rate_init();
+					cat_trash_recycle_init($("div.trash_icon_cat"));
+					edit_cat_init($("li.ui-draggable", $(this)));
+					edit_rate_init($("ul.ul_rate_list li", $("li.ui-draggable", $(this))), "rate_name");
+					edit_rate_init($("ul.ul_rate_list li", $("li.ui-draggable", $(this))), "rate_price");
+					ul_rate_trash_init($("li.ui-draggable ul", $(this)));
+					
+					$("li.ui-draggable", $(this))
+					.removeClass("ui-draggable")
+					.removeAttr("style");
+				}
+			})
+			.droppable({
+				accept: "div.recycle_icon img",
+				activeClass: "container_active",
+				hoverClass: "container_hover",
+				drop: function(event, ui){
+					recycle_cat(ui.draggable);
+				}
+			});
+			
+			// initiate trash container as a droppable
+			$("ul.ul_trash_list").droppable({
+				accept: "div.trash_icon_cat img, div.trash_icon_rate img",
+				activeClass: "container_active",
+				hoverClass: "container_hover",
+				drop: function(event, ui){
+					if(ui.draggable.parent().hasClass("trash_icon_cat")){
+						delete_cat(ui.draggable);
+					}else if(ui.draggable.parent().hasClass("trash_icon_rate")){
+						delete_rate(ui.draggable);
+					}
+				}
+			});
+			
+			// drag the cat sample to the list of cats
+			$("ul.ul_cat_list_sample > li.li_cat_list").draggable({
+				connectToSortable: "ul.ul_cat_list",
+				helper: "clone",
+				revert: "invalid",
+				opacity: opacity_drag,
+				containment: "document",
+			});
+		}
+		
+		function rate_init(){
+			// reorder the rates within a cat
+			$("ul.ul_rate_list").sortable({
+				revert: true,
+				connectWith: "ul.ul_rate_list",
+				opacity: opacity_drag,
+				update: function(){
+				//	alert("update 4");
+					show_update_slider();
+				},
+				receive: function(event, ui){
+					var $li_rate_list = $("li.ui-draggable", $(this));
+					
+					edit_rate_init($li_rate_list, "rate_name");
+					edit_rate_init($li_rate_list, "rate_price");
+					rate_trash_init($li_rate_list);
+					
+					$li_rate_list
+					.removeClass("ui-draggable")
+					.removeAttr("style");
+				},
+			});
+			
+			// drag a rate sample to a cat
+			$("ul.ul_rate_list_sample li").draggable({
+				connectToSortable: "ul.ul_rate_list",
+				helper: "clone",
+				revert: "invalid",
+				opacity: opacity_drag,
+				containment: "document",
+			});
+		}
+		
+		function scroll_init(){
+			$("div.trash_content ul.ul_trash_list").slimscroll({
+				height: '122px',
+				railVisible: true,
+				disableFadeOut: true,
+				railOpacity: 0.2,
+			});
+		}
+		
+		function cat_trash_recycle_init($item){
+			// In all cases, trash and recycle icons are not displayed.
+			// show icons
+			var effect = null;
+			var rand_num = Math.floor(Math.random() * 3 + 1);
+			
+			switch(rand_num){
+				case 1:
+					effect = "bounce";
+					break;
+				case 2:
+					effect = "drop";
+					break;
+				case 3:
+					effect = "pulsate";
+					break;
+			}
+			
+			window.setTimeout(function(){
+				$item.show(effect, speed_show_hide);
+			}, 300);
+			
+			// The draggable here must be img.
+			// div.trash_icon_cat has margin that is not 0px.
+			// If the draggable is a element that has margin, the droppable postion will be offset by the margin.
+			$("img", $item)
+			.draggable({
+				revert: "invalid",
+				containment: "document",
+				opacity: opacity_drag,
+				scroll: false,
+			//	appendTo: "div.div_ul_cat",
+			//	helper: 'clone'
+			})
+			.dblclick(function(){
+				if($item.attr("class") == "trash_icon_cat"){
+					delete_cat($(this));
+				}else if($item.attr("class") == "recycle_icon"){
+					recycle_cat($(this));
+				}
+			});
+		}
+		
+		function rate_trash_all_init(){
+			$("ul.ul_rate_list").each(function(){
+				var $ul_rate_list = $(this);
+				ul_rate_trash_init($ul_rate_list);
+			});
+		}
+		
+		function ul_rate_trash_init($item){
+			var $ul_rate_list = $item;
+			
+			$("li", $ul_rate_list).each(function(){
+				var $li_rate_list = $(this);
+				rate_trash_init($li_rate_list);
+			});
+		}
+		
+		function rate_trash_init($item){
+			var $li_rate_list = $item;
+			
+			show_rate_trash($li_rate_list);
+			$("div.trash_icon_rate img", $li_rate_list)
+			.draggable({
+				revert: "invalid",
+				containment: "document",
+				opacity: opacity_drag,
+				scroll: false,
+				appendTo: "document",
+			})
+			.dblclick(function(){
+				delete_rate($(this));
+			});
+		}
+		
+		function show_rate_trash($item){
+			var $li_rate = $item;
+			var $div_trash_icon = $("div.trash_icon_rate", $li_rate);
+			var timer = null;
+			
+			$div_trash_icon.css({
+				"margin": "-25px 0px 0px 250px",
+				"height": "25px",
+				"line-height": "25px",
+				"width": "21px",
+			});
+			
+			$li_rate.hover(function(){
+				timer = window.setTimeout(function(){
+					$div_trash_icon.show("bounce", 300);
+				}, 300)
+			}, function(){
+				window.clearTimeout(timer);
+				$div_trash_icon.hide("bounce", 300);
+			});
+		}
+		
+		function delete_rate($item){
+			var $li_rate_list = $item.closest("li");
+			var $div_trash_icon = $item.closest("div.trash_icon_rate");
+			var $ul_rate_list = $li_rate_list.parent();
+			
+			$div_trash_icon.hide();
+			$li_rate_list.hide(speed_show_hide, function(){
+				$li_rate_list.remove();
+				
+			//	alert("update 8");
+				show_update_slider();
+			});
+		}
+		
+		// delete cat
+		function delete_cat($item){
+			var $li_cat_list = $item.closest("li.li_cat_list");
+			
+			trash_list_item_init($li_cat_list, 2);
+		}
+		
+		function trash_list_all_init(){
+			$("ul.ul_trash_list li.li_cat_list").each(function(){
+				var $li_cat_list = $(this);
+				
+				trash_list_item_init($li_cat_list, 1);
+			});
+		}
+		
+		function trash_list_item_init($li_cat_list, operation){
+			var speed = 0;
+			switch(operation){
+				case 1:
+					speed = speed_transformer_load; // initiate the trash list
+					break;
+				case 2:
+					speed = speed_transformer; // delete
+					break;
+				default:
+					speed = speed_transformer;
+					break;
+			}
+		
+			$("div.div_cat_name", $li_cat_list).unbind("dblclick");
+			$("ul.ul_rate_list div", $li_cat_list).unbind("dblclick");
+			$("ul.ul_rate_list li", $li_cat_list).unbind('mouseenter').unbind('mouseleave');
+			
+			$li_cat_list.find("ul.ul_rate_list").sortable("disable");
+			if(!$li_cat_list.find("div.recycle_icon").length){
+				$li_cat_list.find("ul.ul_rate_list").before("<div class = 'recycle_icon'><img src = '/frontend/images/rates_recycle.png' /></div>");
+			}
+			
+			$li_cat_list.find("div.div_cat_name").css("cursor", "default");
+			$li_cat_list.find("li").css("cursor", "default");
+			
+			
+			if(operation == 1){
+				$li_cat_list.css("display", "inline-block");
+				trash_list_transform($li_cat_list);
+			}else if(operation == 2){
+				$li_cat_list.hide(speed_show_hide, function(){
+					var $trash_list = $("ul.ul_trash_list", $("div.trash_content"));
+					
+					$li_cat_list.find("div.trash_icon_cat").remove();
+					$li_cat_list.appendTo($trash_list).fadeIn(speed_show_hide, function(){
+						trash_list_transform($(this));
+					});
+				});
+			}
+			
+			function trash_list_transform($item){
+				var $li_cat_list = $item;
+				
+				// transform cat name
+				$li_cat_list.find("div.div_cat_name").animate({
+					width: "75px",
+					height: "20px",
+					lineHeight: "20px",
+					fontSize: "9px",
+					marginTop: "9px",
+					marginLeft: "16px",
+				}, speed);
+					
+				// transform rate info div
+				$li_cat_list.find("ul.ul_rate_list").find("li").find("div.div_rate_info").animate({
+					width: "60px",
+					height: "12px",
+					lineHeight: "12px",
+					fontSize: "8px",
+					backgroundColor: "",
+					color: "#666",
+				}, speed);
+				
+				// tranform the small "li"s
+				$li_cat_list.find("ul.ul_rate_list").find("li").animate({
+					marginTop: "5px",
+					marginRight: "5px",
+					marginLeft: "5px",
+					fontSize: "0px",
+					height: "12px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+					lineHeight: "12px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+				//	minWidth: "122px",
+				//	maxWidth: "122px",
+				}, speed);
+				
+				// transform the big "ul"
+				$li_cat_list.find("ul.ul_rate_list").animate({
+					marginTop: "20px",
+					marginLeft: "10px",
+					paddingTop: "10px",
+					paddingBottom: "5px",
+				//	minWidth: "132px",
+				//	maxWidth: "132px",
+					minHeight: "17px",
+				}, speed, function(){
+					$li_cat_list.find("ul.ul_rate_list").find("li").animate({
+						minWidth: "122px",
+						maxWidth: "122px",
+					}, speed);
+					
+					$li_cat_list.find("ul.ul_rate_list").animate({
+						minWidth: "132px",
+						maxWidth: "132px",
+					}, speed, function(){
+						// transform recycle icon
+						transform_recycle_icon();
+						
+						// update scroll bar
+						update_scroll_bar();
+					});
+				});
+				
+				// transform right margin
+				$li_cat_list.find("ul.ul_rate_list").find("li").find("div.div_rate_info:first").animate({
+					marginRight: "2px",
+				}, speed);
+			
+				function transform_recycle_icon(){
+					// Once every animation is done, initiate the recycle icon.
+					$li_cat_list.find("div.recycle_icon").animate({
+						marginTop: "10px",
+						marginLeft: "115px",
+					}, 0);
+					$li_cat_list.find("div.recycle_icon").find("img").animate({
+						height: "20px",
+					}, 0, function(){
+						if(operation == 2){
+						//	alert("update 5");
+							show_update_slider();
+							check_trash_empty();
+						}
+					
+						cat_trash_recycle_init($li_cat_list.find("div.recycle_icon"));
+					});
+				}
+			}
+		}
+		
+		// recycle cat
+		function recycle_cat($item){
+			var $li_cat_list = $item.closest("li.li_cat_list");
+			
+			edit_cat_init($li_cat_list);
+			edit_rate_init($("ul.ul_rate_list li", $li_cat_list), "rate_name");
+			edit_rate_init($("ul.ul_rate_list li", $li_cat_list), "rate_price");
+			
+			ul_rate_trash_init($li_cat_list.find("ul.ul_rate_list"));
+			
+			$li_cat_list.find("ul.ul_rate_list")
+			.sortable("enable");
+			if(!$li_cat_list.find("div.trash_icon_cat").length){
+				$li_cat_list.find("ul.ul_rate_list").before("<div class = 'trash_icon_cat'><img src = '/frontend/images/rates_trash.png' /></div>");
+			}
+			
+			$li_cat_list.find("div.div_cat_name").css("cursor", "move");
+			$li_cat_list.find("li").css("cursor", "move");
+			
+			$li_cat_list.hide(speed_show_hide, function(){
+				var $cat_list = $("ul.ul_cat_list");
+				
+				$li_cat_list.find("div.recycle_icon").remove();
+				$li_cat_list.appendTo($cat_list).fadeIn(speed_show_hide, function(){
+					switch(style_transformer){
+						case 1:
+							transform_1();
+							break;
+						case 2:
+							transform_2();
+							break;
+						case 3:
+							transform_3();
+							break;
+						case 4:
+							transform_4();
+							break;
+						default:
+							transform_1();
+							break;
+					}
+				
+					/////////////////////////////////////// transform style 1 /////////////////////////////////////////
+					function transform_1(){
+						// transform cat name
+						$li_cat_list.find("div.div_cat_name").animate({
+							width: "150px",
+							height: "40px",
+							lineHeight: "40px",
+							fontSize: "17px",
+							marginTop: "19px",
+							marginLeft: "31px",
+						}, speed_transformer);
+						
+						// transform the big "ul"
+						$li_cat_list.find("ul.ul_rate_list").animate({
+							marginTop: "40px",
+							marginLeft: "20px",
+							paddingTop: "20px",
+							paddingBottom: "10px",
+							minWidth: "265px",
+							maxWidth: "265px",
+							minHeight: "35px",
+						}, speed_transformer, function(){
+							// transform trash icon
+							transform_trash_icon();
+							
+							// update scroll bar
+							update_scroll_bar();
+						});
+						
+						// tranform the small "li"s
+						$li_cat_list.find("ul.ul_rate_list").find("li").animate({
+							marginTop: "10px",
+							marginRight: "10px",
+							marginLeft: "10px",
+							minWidth: "245px",
+							maxWidth: "245px",
+							height: "25px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+							lineHeight: "25px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+							fontSize: "16px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+						}, speed_transformer);
+						
+						// transform rate info div
+						$li_cat_list.find("ul.ul_rate_list").find("li").find("div.div_rate_info").animate({
+							width: "120px",
+							height: "25px",
+							lineHeight: "25px",
+							fontSize: "16px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+							backgroundColor: "#b22222",
+							color: "#fff",
+						}, speed_transformer);
+						
+						// transform right margin // has to be the last
+						$li_cat_list.find("ul.ul_rate_list").find("li").find("div.div_rate_info:first").animate({
+							marginRight: "5px",
+						}, 0);
+					}
+				
+					/////////////////////////////////////// transform style 2 /////////////////////////////////////////
+					function transform_2(){
+						// transform cat name
+						$li_cat_list.find("div.div_cat_name").animate({
+							width: "150px",
+							height: "40px",
+							lineHeight: "40px",
+							fontSize: "17px",
+							marginTop: "19px",
+							marginLeft: "31px",
+						}, speed_transformer);
+						
+						// transform the big "ul"
+						$li_cat_list.find("ul.ul_rate_list").animate({
+							marginTop: "40px",
+							marginLeft: "20px",
+							paddingTop: "20px",
+						//	paddingBottom: "10px",
+							minWidth: "265px",
+							maxWidth: "265px",
+							minHeight: "35px",
+						}, speed_transformer, function(){
+							// transform rate info div
+							$li_cat_list.find("ul.ul_rate_list").find("li").find("div.div_rate_info").animate({
+								width: "120px",
+								height: "25px",
+								lineHeight: "25px",
+								fontSize: "16px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+								backgroundColor: "#b22222",
+								color: "#fff",
+							}, speed_transformer);
+							
+							$li_cat_list.find("ul.ul_rate_list").animate({
+							//	paddingTop: "20px",
+								paddingBottom: "10px",
+							}, speed_transformer, function(){
+								// transform trash icon
+								transform_trash_icon();
+								
+								// update scroll bar
+								update_scroll_bar();
+							});
+						});
+						
+						// tranform the small "li"s
+						$li_cat_list.find("ul.ul_rate_list").find("li").animate({
+							marginTop: "10px",
+							marginRight: "10px",
+							marginLeft: "10px",
+							minWidth: "245px",
+							maxWidth: "245px",
+							height: "25px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+							lineHeight: "25px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+							fontSize: "16px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+						}, speed_transformer);
+						
+						// transform right margin
+						$li_cat_list.find("ul.ul_rate_list").find("li").find("div.div_rate_info:first").animate({
+							marginRight: "5px",
+						}, speed_transformer);
+					}
+					
+					/////////////////////////////////////// transform style 3 /////////////////////////////////////////
+					function transform_3(){
+						// transform cat name
+						$li_cat_list.find("div.div_cat_name").animate({
+							width: "150px",
+							height: "40px",
+							lineHeight: "40px",
+							fontSize: "17px",
+							marginTop: "19px",
+							marginLeft: "31px",
+						}, speed_transformer);
+						
+						// transform the big "ul"
+						$li_cat_list.find("ul.ul_rate_list").animate({
+							marginTop: "40px",
+							marginLeft: "20px",
+							paddingTop: "20px",
+						//	paddingBottom: "10px",
+							minWidth: "265px",
+							maxWidth: "265px",
+							minHeight: "35px",
+						}, speed_transformer, function(){
+							// transform right margin
+							$li_cat_list.find("ul.ul_rate_list").find("li").find("div.div_rate_info:first").animate({
+								marginRight: "5px",
+							}, 0);
+							
+							// transform rate info div
+							$li_cat_list.find("ul.ul_rate_list").find("li").find("div.div_rate_info").animate({
+								width: "120px",
+								height: "25px",
+								lineHeight: "25px",
+								fontSize: "16px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+								backgroundColor: "#b22222",
+								color: "#fff",
+							}, speed_transformer);
+							
+							$li_cat_list.find("ul.ul_rate_list").animate({
+							//	paddingTop: "20px",
+								paddingBottom: "10px",
+							}, speed_transformer, function(){
+								// transform trash icon
+								transform_trash_icon();
+								
+								// update scroll bar
+								update_scroll_bar();
+							});
+						});
+						
+						// tranform the small "li"s
+						$li_cat_list.find("ul.ul_rate_list").find("li").animate({
+							marginTop: "10px",
+							marginRight: "10px",
+							marginLeft: "10px",
+							minWidth: "245px",
+							maxWidth: "245px",
+						//	height: "25px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+						//	lineHeight: "25px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+						}, speed_transformer, function(){
+							$(this).animate({
+								height: "25px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+								lineHeight: "25px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+								fontSize: "16px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+							});
+						});
+					}
+					
+					/////////////////////////////////////// transform style 4 /////////////////////////////////////////
+					function transform_4(){
+						var is_executed = false;
+						
+						// transform the big "ul" // whole
+						$li_cat_list.find("ul.ul_rate_list").animate({
+							marginTop: "40px",
+							marginLeft: "20px",
+						//	paddingTop: "20px",
+						//	paddingBottom: "10px",
+							minWidth: "265px",
+							maxWidth: "265px",
+							minHeight: "35px",
+						}, speed_transformer);
+					
+						// tranform the small "li"s // single
+						$li_cat_list.find("ul.ul_rate_list").find("li").animate({
+							marginTop: "10px",
+							marginRight: "10px",
+							marginLeft: "10px",
+							minWidth: "245px",
+							maxWidth: "245px",	
+						//	height: "25px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+						//	lineHeight: "25px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+						}, speed_transformer, function(){
+							var $li_rate_list = $(this);
+							
+							// transform right margin // single
+							$li_rate_list.find("div.div_rate_info:first").animate({
+								marginRight: "5px",
+							}, 0);
+							
+							// tranform the small "li"s // single
+							$li_rate_list.animate({
+								height: "25px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+								lineHeight: "25px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+								fontSize: "16px", /* !!!!!!!!!!!!!!!!!!!!!!!!!!! */
+							}, speed_transformer);
+							
+							// transform rate info div // single
+							$li_rate_list.find("div.div_rate_info").animate({
+								width: "120px",
+								height: "25px",
+								lineHeight: "25px",
+								fontSize: "16px",
+								backgroundColor: "#b22222",
+								color: "#fff",
+							}, speed_transformer);
+							
+							/////////////////////////// This is a loop. Everything belows can only be executed once!! /////////////////////////////
+							
+							if(!is_executed){
+								is_executed = true;
+								
+								execute_once();
+							}
+						});
+						
+						if(!$li_cat_list.find("ul.ul_rate_list").find("li").length){
+							execute_once();
+						}
+						
+						function execute_once(){
+							// transform cat name // whole
+							$li_cat_list.find("div.div_cat_name").animate({
+								width: "150px",
+								height: "40px",
+								lineHeight: "40px",
+								fontSize: "17px",
+								marginTop: "19px",
+								marginLeft: "31px",
+							}, speed_transformer);
+							
+							// transform the big "ul" // whole
+							$li_cat_list.find("ul.ul_rate_list").animate({
+								paddingTop: "20px",
+								paddingBottom: "10px",
+								lineHeight: "25px",
+							}, speed_transformer, function(){
+								// transform trash icon // whole
+								transform_trash_icon();
+								
+								// update scroll bar // whole
+								update_scroll_bar();
+							});
+						}
+					}
+					
+					function transform_trash_icon(){
+						$li_cat_list.find("div.trash_icon_cat").animate({
+							marginTop: "20px",
+							marginLeft: "235px",
+						}, 0);
+						$li_cat_list.find("div.trash_icon_cat").find("img").animate({
+							height: "40px",
+						}, 0, function(){
+						//	alert("update 6");
+							show_update_slider();
+							check_trash_empty();
+						
+							cat_trash_recycle_init($li_cat_list.find("div.trash_icon_cat"));
+						});
+					}
+				});
+			});
+		}
+		
+		function update_scroll_bar(){
+			$("div.trash_content ul.ul_trash_list").slimscroll();
+		}
+		
+		function edit_cat_init($items){
+			$items.each(function(){
+				var $li_cat_list = $(this);
+				$("div.div_cat_name", $li_cat_list).dblclick(function(){
+					var $div_cat_name = $("div.div_cat_name", $li_cat_list);
+					var $span_cat_name = $("span", $div_cat_name);
+					var $input_cat_name = $("input", $div_cat_name);
+					
+					var old_text = $.trim($span_cat_name.text());
+					var new_text = null;
+					
+					$span_cat_name.hide();
+					$input_cat_name
+					.show("highlight", {color: '#cbb174'}, 1000)
+					.val(old_text)
+					.focus()
+					.blur(function(){
+						new_text = $.trim($input_cat_name.val().replace(/\r\n/gi, ""));
+						$input_cat_name.hide();
+						
+						if(new_text){
+							$span_cat_name.text(new_text);
+						}
+						$span_cat_name.show('pulsate', 200, function(){
+						//	alert("update 10");
+							show_update_slider();
+						});
+					})
+					.keypress(function(e){
+						if(e.which == 13){
+							$input_cat_name.blur();
+						}
+					});
+				});
+			});
+		}
+		
+		function edit_rate_init($items, field){
+			$items.each(function(){
+				var $li_rate = $(this);
+				var $div_field = null;
+				if(field == "rate_name"){
+					$div_field = $("div.div_rate_name", $li_rate);
+				}else if(field == "rate_price"){
+					$div_field = $("div.div_rate_price", $li_rate);
+					
+					// Only numbers can be input.
+					var $input_price = $("input", $div_field);
+					$input_price
+					.keyup(function(e){
+						if(e.which == 37 || e.which == 39){
+							return;
+						}
+						$(this).val($(this).val().replace(/[^0-9.]/g, "").replace(/^\./g, "").replace(/^0/g, "").replace(/\.{2,}/g, ".").replace(".", "$#$").replace(/\./g, "").replace("$#$", "."));
+					})
+					.bind("paste", function(){
+						$(this).val($(this).val().replace(/[^0-9.]/g, ""));
+					})
+					.css("ime-mode", "disabled");
+				}
+				
+				$div_field.dblclick(function(){
+					var $span_field = $("span", $div_field);
+					var $input_field = $("input", $div_field);
+					
+					var old_text = $.trim($span_field.text());
+					var new_text = null;
+					
+					$span_field.hide();
+					$input_field
+					.show("highlight", {color: '#b22222'}, 1000)
+					.val(field == "rate_price" ? old_text.replace(/^\$\s/g, "") : old_text)
+					.focus()
+					.blur(function(){
+						new_text = $.trim($input_field.val().replace(/\r\n/gi, ""));
+						$input_field.hide();
+						
+						if(new_text){
+							$span_field.text(field == "rate_price" ? new_text.replace(/^/g, "$ ").replace(/\.$/g, "") : new_text);
+						}
+						$span_field.show('pulsate', 200, function(){
+						//	alert("update 11");
+							show_update_slider();
+						});
+					})
+					.keypress(function(e){
+						if(e.which == 13){
+							$input_field.blur();
+						}
+					});
+				});
+			});
+		}
+	});
+</script>
+
+<!-- 点击按钮更新，暂时停用，改用slide to update
+<script>
+	$(function(){
+		// 箭头的点击效果
+		$("img.update_icon")
+		.mousedown(function(){
+			$(this).css("top", "1px").css("left", "1px");
+		})
+		.mouseup(function(){
+			$(this).css("top", "0px").css("left", "0px");
+		});
+		
+		// update
+		$("img.update_icon").click(function(){
+			block_wait();
+		
+			var json_str = '';
+			var json_obj = null;
+			var cat_index = 1;
+			var cat_count = $("ul.ul_cat_list li.li_cat_list").length + $("ul.ul_trash_list li.li_cat_list").length;
+			
+			json_str += '{';
+			
+			$("li.li_cat_list").each(function(){
+				var $li_cat_list = $(this);
+				
+				if($li_cat_list.parent().hasClass("ul_cat_list_sample")){
+					return;
+				}
+				
+				var $ul_rate_list = $li_cat_list.find("ul.ul_rate_list");
+				var cat_name = $.trim($li_cat_list.find("div.div_cat_name span").text());
+				var json_str_cat = '';
+				var rate_index = 1;
+				var rate_count = $ul_rate_list.find("li").length;
+				
+				json_str_cat += '"cat_' + cat_index++ + '":{"cat_name":"' + cat_name + '","is_active":"';
+				if($li_cat_list.parent().hasClass("ul_cat_list")){
+					json_str_cat += '1';
+				}else if($li_cat_list.parent().hasClass("ul_trash_list")){
+					json_str_cat += '0';
+				}
+				json_str_cat += '","rate_list":{';
+				
+				$ul_rate_list.find("li").each(function(){
+					var $li_rate_list = $(this);
+					var rate_name = $.trim($li_rate_list.find("div.div_rate_name span").text());
+					var rate_price = $.trim($li_rate_list.find("div.div_rate_price span").text().replace(/^\$/gi, ''));
+					
+					json_str_cat += '"rate_' + rate_index++ + '":{"rate_name":"' + rate_name + '","rate_price":"' + rate_price + '"}';
+					
+					if(rate_index != rate_count + 1){
+						json_str_cat += ',';
+					}
+				});
+				
+				json_str_cat += '}}';
+				
+				if(cat_index != cat_count + 1){
+					json_str_cat += ',';
+				}
+				
+				json_str += json_str_cat;
+			});
+			
+			json_str += '}';
+			json_obj = $.parseJSON(json_str);
+			
+			//////////////////////////////////////////////////////////////////////////
+			
+			$.post(
+				"/ratescat/ajaxUpdate",
+				json_obj,
+				function(data){
+					if(data.status){
+						block_growl();
+					}
+				},
+				'json'
+			);
+		});
+		
+		// please wait...
+		function block_wait(){
+			$("div.waiting div.please_wait").html("We are updating rate information.<br />Please wait...");
+			$.blockUI({
+				message: $("div.waiting"),
+				css: {
+					width: '400px',
+					height: '70px',
+					border: 'none', 
+					padding: '15px', 
+					backgroundColor: '#000',
+					'-webkit-border-radius': '10px', 
+					'-moz-border-radius': '10px', 
+					opacity: .8, 
+					color: '#fff' 
+				}
+			});
+		}
+		
+		function block_growl(){
+			$("h4:first", $("div.growlUI")).text("You've successfully updated the rate information.");
+			$("h4:last", $("div.growlUI")).text("Have fun!");
+			$("div.growlUI").css("background", "url(/frontend/images/check_2.png) no-repeat 10px 0px");
+			
+			$.blockUI({
+				message: $("div.growlUI"), 
+				fadeIn: 700, 
+				fadeOut: 700, 
+				timeout: 3000, 
+				showOverlay: false,
+				centerY: false, 
+				css: { 
+					width: 'auto',
+					top: '50px', 
+					left: '', 
+					right: '10px', 
+					border: 'none', 
+					padding: '5px', 
+					backgroundColor: '#000', 
+					'-webkit-border-radius': '10px', 
+					'-moz-border-radius': '10px', 
+					opacity: .8, 
+					color: '#fff' 
+				} 
+			});
+		}
+	});
+</script>
+
+<!--Please wait...-->
+<div class = "waiting" style = "display: none;">
+	<div class = "loading">
+		<img src = "/frontend/images/loading_4.gif" />
+	</div>
+	<div class = "please_wait">
+		We are updating rate information.<br />Please wait...
+	</div>	
+</div>
+
+<!--growlUI-->
+<div class = "growlUI" style = "display: none;">
+	<h4></h4>
+	<h4></h4>
+</div>
+
+<!------------------------------------------------------------------------------------------------------>
+
+<div class = "rate_head">
+	<div class = "rate_head_1">
+		<ul class = "ul_cat_list_sample">
+			<li class = "li_cat_list">
+				<div class = "div_cat_name">
+					<span>Full Service</span>
+					<input type = "text" maxlength = "15" />
+				</div>
+				<ul class = "ul_rate_list_temp">
+					<li><div class = "div_rate_name div_rate_info"><span>30 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;90</span><input type = "text" maxlength = "6" /></div>
+						<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+					</li>
+					<li><div class = "div_rate_name div_rate_info"><span>60 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;160</span><input type = "text" maxlength = "6" /></div>
+						<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+					</li>
+					<li><div class = "div_rate_name div_rate_info"><span>90 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;250</span><input type = "text" maxlength = "6" /></div>
+						<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<div class = "rate_head_2">
+		<ul class = "ul_rate_list_sample">
+			<li>
+				<div class = "div_rate_name div_rate_info"><span>30 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;90</span><input type = "text" maxlength = "6" /></div>
+				<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+			</li>
+			<li>
+				<div class = "div_rate_name div_rate_info"><span>45 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;120</span><input type = "text" maxlength = "6" /></div>
+				<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+			</li>
+			<li>
+				<div class = "div_rate_name div_rate_info"><span>60 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;160</span><input type = "text" maxlength = "6" /></div>
+				<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+			</li>
+			<li>
+				<div class = "div_rate_name div_rate_info"><span>90 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;250</span><input type = "text" maxlength = "6" /></div>
+				<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+			</li>
+			<li>
+				<div class = "div_rate_name div_rate_info"><span>120 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;320</span><input type = "text" maxlength = "6" /></div>
+				<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+			</li>
+		</ul>
+	</div>
+	<div class = "rate_head_3">
+		<div class= "trash">
+			<div class = "trash_title" >
+				Recycle Bin
+				<!--
+				<input id = "empty" type = "button" value = "empty" />
+				-->
+				<div class = "div_slider_2_con">
+					<div id = "div_slider_2">
+						<div id = "well_update_2">
+							<div id = "h2_update_2">
+								<span id = "slider_icon_update_2">>>></span>
+								<span id = "slider_text_update_2">&nbsp;&nbsp;slide to empty&nbsp;&nbsp;</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class = "trash_content">
+				<ul class = 'ul_trash_list'>
+				
+				<?php foreach($cat_inactive as $single_info): ?>
+					<li class = "li_cat_list">
+						<div class = "div_cat_name">
+							<span><?php echo $single_info['cat_obj']->name; ?></span>
+							<input type = "text" maxlength = "12" />
+						</div>
+						<ul class = "ul_rate_list">
+							<?php foreach($single_info['rate_array'] as $rate_obj): ?>
+								<li>
+									<div class = "div_rate_name div_rate_info"><span><?php echo $rate_obj->info; ?></span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;<?php echo $rate_obj->price; ?></span><input type = "text" maxlength = "6" /></div>
+									<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+								</li>
+							<?php endforeach; ?>
+						
+							<!--
+							<li>
+								<div class = "div_rate_name div_rate_info"><span>30 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;90</span><input type = "text" maxlength = "6" /></div>
+								<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+							</li>
+							<li>
+								<div class = "div_rate_name div_rate_info"><span>60 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;160</span><input type = "text" maxlength = "6" /></div>
+								<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+							</li>
+							<li>
+								<div class = "div_rate_name div_rate_info"><span>90 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;250</span><input type = "text" maxlength = "6" /></div>
+								<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+							</li>
+							-->
+						</ul>
+					</li>
+				<?php endforeach; ?>
+				
+					<!--
+					<li class = "li_cat_list">
+						<div class = "div_cat_name">
+							<span>Fetish</span>
+							<input type = "text" maxlength = "12" />
+						</div>
+						<ul class = "ul_rate_list">
+							<li>
+								<div class = "div_rate_name div_rate_info"><span>30 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;90</span><input type = "text" maxlength = "6" /></div>
+								<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+							</li>
+							<li>
+								<div class = "div_rate_name div_rate_info"><span>60 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;160</span><input type = "text" maxlength = "6" /></div>
+								<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+							</li>
+							<li>
+								<div class = "div_rate_name div_rate_info"><span>90 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;250</span><input type = "text" maxlength = "6" /></div>
+								<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+							</li>
+						</ul>
+					</li>
+					-->
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class = "div_ul_cat">
+	<ul class = "ul_cat_list">
+	
+	<?php foreach($cat_active as $single_info): ?>
+		<li class = "li_cat_list">
+			<div class = "div_cat_name">
+				<span><?php echo $single_info['cat_obj']->name; ?></span>
+				<input type = "text" maxlength = "12" />
+			</div>
+			<div class = "trash_icon_cat">
+				<img src = "/frontend/images/rates_trash.png" />
+			</div>
+			<ul class = "ul_rate_list">
+			
+			<?php foreach($single_info['rate_array'] as $rate_obj): ?>
+				<li>
+					<div class = "div_rate_name div_rate_info"><span><?php echo $rate_obj->info; ?></span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;<?php echo $rate_obj->price; ?></span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+			<?php endforeach; ?>
+				
+				<!--
+				<li>
+					<div class = "div_rate_name div_rate_info"><span>30 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;90</span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+				<li>
+					<div class = "div_rate_name div_rate_info"><span>60 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;160</span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+				<li>
+					<div class = "div_rate_name div_rate_info"><span>90 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;250</span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+				-->
+			</ul>
+		</li>
+	<?php endforeach; ?>
+	
+		<!--
+		<li class = "li_cat_list">
+			<div class = "div_cat_name">
+				<span>Full Service</span>
+				<input type = "text" maxlength = "12" />
+			</div>
+			<div class = "trash_icon_cat">
+				<img src = "/frontend/images/rates_trash.png" />
+			</div>
+			<ul class = "ul_rate_list">
+				<li>
+					<div class = "div_rate_name div_rate_info"><span>30 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;90</span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+				<li>
+					<div class = "div_rate_name div_rate_info"><span>60 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;160</span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+				<li>
+					<div class = "div_rate_name div_rate_info"><span>90 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;250</span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+			</ul>
+		</li><li class = "li_cat_list">
+			<div class = "div_cat_name">
+				<span>Massage</span>
+				<input type = "text" maxlength = "12" />
+			</div>
+			<div class = "trash_icon_cat">
+				<img src = "/frontend/images/rates_trash.png" />
+			</div>
+			<ul class = "ul_rate_list">
+				<li>
+					<div class = "div_rate_name div_rate_info"><span>30 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;90</span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+				<li>
+					<div class = "div_rate_name div_rate_info"><span>60 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;160</span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+				<li>
+					<div class = "div_rate_name div_rate_info"><span>90 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;250</span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+			</ul>
+		</li><li class = "li_cat_list">
+			<div class = "div_cat_name">
+				<span>Fetish</span>
+				<input type = "text" maxlength = "12" />
+			</div>
+			<div class = "trash_icon_cat">
+				<img src = "/frontend/images/rates_trash.png" />
+			</div>
+			<ul class = "ul_rate_list">
+				<li>
+					<div class = "div_rate_name div_rate_info"><span>30 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;90</span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+				<li>
+					<div class = "div_rate_name div_rate_info"><span>60 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;160</span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+				<li>
+					<div class = "div_rate_name div_rate_info"><span>90 minutes</span><input type = "text" maxlength = "15" /></div><div class = "div_rate_price div_rate_info"><span>$&nbsp;250</span><input type = "text" maxlength = "6" /></div>
+					<div class = "trash_icon_rate"><img src = "/frontend/images/rates_trash.png" /></div>
+				</li>
+			</ul>
+		</li>
+		-->
+	</ul>
+</div>
+
+<div style="height:10px;"></div>
+<div style="border-top:1px solid black;padding-bottom:20px;"></div>
+<h4>Special Offers</h4>
+<div>
+    <p><?php echo stripslashes($text_info->content); ?></p>
+    <a href="<?php echo $this->url('ratescat',
+        array('action'=>'editratesinfo', 'id' =>'4'));?>" title = "Click to edit the content of Special Offers.">
+		<input type = "button" value = "Edit" />
+	</a>
+</div>

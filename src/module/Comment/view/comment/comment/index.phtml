@@ -1,0 +1,273 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="/resources/demos/style.css" />
+
+<script>
+	$(function(){
+		$(document).tooltip({
+			track: true,
+			show:{
+				effect: "size",
+				delay: 100,
+			},
+			hide:{
+				effect: "clip",
+				delay: 0,
+			},
+		});
+	})
+</script>
+
+<!--
+<script>
+  var id = 0;
+  $(function() {
+    $( "#delete_dialog" ).dialog({
+      autoOpen: false,
+	  resizable: false,
+	  modal:true,
+	  buttons: {
+        "Delete": function() {
+          $( this ).dialog( "close" );
+          window.location.href = "/comment/delete/" + id;
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      },
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      }
+    });
+ 
+    $( ".delete_opener" ).click(function(e) {
+      $( "#delete_dialog" ).dialog( "open" );
+ 	  e.preventDefault();
+ 	  id = $(this).attr("comment_id");
+    });
+  });
+</script>
+-->
+
+<!-------------------------------------------------- Delete ----------------------------------------------------->
+
+<!--js for deleting-->
+<script>
+  var comment_id_delete = 0;
+  
+  $(function() {
+	delete_init($("a.delete_comment_opener"));
+  });
+  
+  function delete_init(delete_opener_a){
+	$( "#delete_comment_dialog" ).dialog({
+      autoOpen: false,
+	  resizable: false,
+	  modal:true,
+	  buttons: {
+        "Delete": function() {
+			$( this ).dialog( "close" );
+			$.post(
+				"/comment/ajaxdelete", 
+				{"comment_id":comment_id_delete},
+				function(data){
+					$("tr[comment_id=" + comment_id_delete + "]").animate().hide(1000);
+					window.setTimeout('$("tr[comment_id=" + comment_id_delete + "]").remove()', 1500);
+				},
+				'json'
+			);
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      },
+      show: {
+        effect: "shake",
+        duration: 500
+      },
+      hide: {
+        effect: "puff",
+        duration: 1000
+      },
+	  beforeClose: function(){
+		$("tr[comment_id=" + comment_id_delete + "]").animate({
+			backgroundColor: "#fff",
+			color: "#000",
+		}, 1500);
+	  }
+    });
+ 
+    delete_opener_a.click(function(e) {
+	  e.preventDefault();
+      $( "#delete_comment_dialog" ).dialog( "open" );
+ 	  comment_id_delete = $(this).attr("comment_id");
+	  $("tr[comment_id=" + comment_id_delete + "]").animate({
+			backgroundColor: "#aa0000",
+			color: "#fff",
+		}, 1500);
+    });
+  }
+</script>
+
+<!--删除对话框-->
+<div id="delete_comment_dialog" title="Delete comment">
+  <p>Sure you wanna delete the comment?</p>
+</div>
+
+<!-------------------------------------------- Ajax Common ---------------------------------------------->
+
+<!--Ajax Common-->
+<script>
+	var xmlHttp = null;
+	
+	function getXmlHttpObject(){
+		var xmlHttpObject = null;
+		try{
+			// FF, Opera 8.0+, Safari, Chrome
+			xmlHttpObject = new XMLHttpRequest();
+		}catch(e){
+			// Internet Explorer
+			try{
+				xmlHttpObject = new ActiveXObject("Msxml2.XMLHTTP");
+			}catch(e){
+				xmlHttpObject = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+		}
+		return xmlHttpObject;
+	}
+</script>
+
+<!------------------------------------------------- Edit ------------------------------------------------------->
+
+<!--js for editing-->
+<script>
+	var comment_id_edit = 0;
+	var comment_content_edit = null;
+	var is_locked = false;
+	
+	// update content ajax请求
+	function updateCommentContent(comment_id, comment_content){
+		xmlHttp = getXmlHttpObject();
+		if(xmlHttp){
+			var url = "/comment/ajaxeditcontent/" + comment_id + "/" + comment_content;
+			xmlHttp.open("get", url, true);
+			xmlHttp.onreadystatechange = callback_content_edit;
+			xmlHttp.send(null);
+			$("img", $("span.comment_content_span[commentid=" + comment_id + "]")).css("display", "inline");
+		}
+	}
+	
+	// update content 回调函数
+	function callback_content_edit(){
+		if(xmlHttp.readyState == 4){
+			var span_now = $("span.comment_content_span[commentid=" + comment_id_edit + "]");
+			$("img", span_now).css("display", "none");
+			$("input", span_now).css("display", "none");
+			$("span", span_now).text(comment_content_edit).css("display", "inline");
+			
+			is_locked = false;
+		}
+	}
+
+	$(function(){
+		edit_content_init($("span.comment_content_span"));
+	});
+	
+	function edit_content_init(edit_dblclick_span){
+		$("span", edit_dblclick_span).dblclick(function(){
+			if(!is_locked){
+				is_locked = true;
+				comment_id_edit = $(this).parent().attr("commentid"); 
+				$(this).css("display", "none");
+				$(this).siblings("input").css("display", "inline").val($.trim($(this).text()))
+				.focus()
+				.blur(function(){
+					var comment_content = $.trim($(this).val());
+					if(comment_content){
+						comment_content_edit = comment_content;
+						$(this).siblings("span").text($(this).val());
+						updateCommentContent(comment_id_edit, comment_content);
+						return;
+					}
+					// 如果输入为空，则不发送ajax请求，而是直接显示原值
+					$(this).css("display", "none");
+					$(this).siblings("span").css("display", "inline");
+					is_locked = false;
+				});
+			}
+		});
+	}
+</script>
+
+<!------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------->
+
+
+<?php
+$title = 'Comments Maintenance';
+$this->headTitle($title);
+?>
+
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+
+<table class="table">
+<tr>
+	<th style = "width: 20%">time</th>
+    <th style = "width: 15%">poster</th>
+	<th style = "width: 15%">for girl</td>
+    <th style = "width: 40%">content</th>
+    <th style = "width: 10%">&nbsp;</th>
+</tr>
+<?php foreach ($girl_name_and_comment_array as $single_girl_name_and_comment) : ?>
+<tr comment_id = "<?php echo $single_girl_name_and_comment['commentObject']->id ?>" style = "height: 40px;">
+	<td style = "width: 20%; vertical-align: middle;"><?php echo $this->escapeHtml($single_girl_name_and_comment['commentObject']->post_time);?></td>
+    <td style = "width: 15%; vertical-align: middle;"><?php echo $this->escapeHtml($single_girl_name_and_comment['commentObject']->poster);?></td>
+	<td style = "width: 15%; vertical-align: middle;"><?php echo $this->escapeHtml($single_girl_name_and_comment['girlName']);?></td>
+	
+	<!--content-->
+    <td style = "width: 40%; vertical-align: middle;">
+		<!--
+		<?php echo $this->escapeHtml($single_girl_name_and_comment['commentObject']->content);?>
+		-->
+		<span class = "comment_content_span" style = "margin: 0px; padding: 0px; width: 100%;" commentid = "<?php echo $single_girl_name_and_comment['commentObject']->id; ?>">
+			<span class = "comment_content_target" style = "cursor: pointer;" title = "Double click to edit the comment.">
+				<?php echo $single_girl_name_and_comment['commentObject']->content;?>
+			</span>
+			<input maxlength = "100" type = "text" style = "margin: 0px; width: 85%; height: 13px; display: none;" />
+			<img style = 'margin: 0px; padding: 0px; height: 20px; display: none;' src = '/frontend/images/loading_1.gif' />
+		</span>
+	</td>
+	
+    <td style = "width: 10%; vertical-align: middle;">
+        <a class = "delete_comment_opener" comment_id = "<?php echo $single_girl_name_and_comment['commentObject']->id ?>" href="" title = "Click to delete this comment.">Delete</a>
+    </td>
+</tr>
+<?php endforeach; ?>
+</table>
+
+<!--
+<div id="delete_dialog" title="Delete comment">
+  <p>Sure you wanna delete the comment?</p>
+</div>
+-->
+
+<?php ENDIF ?>

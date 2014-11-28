@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="/resources/demos/style.css" />
+
+<!--------------------------------------- Scroll to top ------------------------------------------->
+<script src = "/frontend/plugins/scrollToTop/scroll_to_top.js"></script>
+	
+<?php
+// module/BasicInfo/view/basicInfo/basicInfo/index.phtml:
+
+$title = 'Shop Information';
+$this->headTitle($title);
+?>
+
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+<div>
+    <label>
+        <span> shop name:</span><span style="width:600px;"><?php echo $basicInfo->name ?></span>
+    </label>
+    <label> 
+        <span> phone:</span><span style="width:600px;"><?php echo $basicInfo->phone ?></span>
+    </label>
+	<label> 
+        <span> email:</span><span style="width:600px;"><?php echo $basicInfo->email ?></span>
+    </label>
+    <label>
+        <span> address:</span><span style="width:600px;"><?php echo $basicInfo->address ?></span>
+    </label>
+    <label>
+        <span> latitude:</span><span style="width:200px;"><?php echo $basicInfo->lattitude ?></span>
+        <span> longitude:</span><span style="width:200px;"><?php echo $basicInfo->longitude ?></span>
+    </label>
+	<label> 
+        <span title="hehe ,just test"> password:</span><span style="width:300px;">
+			<a href="/user/change-password" title = "Click to change the password.">change password</a>
+		</span>
+    </label>
+    <a href="<?php echo $this->url('shopinfo',
+        array('action'=>'edit', 'id' => $basicInfo->id));?>">
+		<input type = "button" value = "Edit" />
+	</a>
+</div>

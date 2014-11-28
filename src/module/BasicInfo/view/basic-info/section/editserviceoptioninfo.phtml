@@ -1,0 +1,54 @@
+<script src="/ckeditor/ckeditor.js"></script>
+<?php
+$title = 'Edit Service Option Information';
+$this->headTitle($title);
+?>
+<style type="text/css">
+	textarea{
+		width: 700px;
+		height:300px;
+	}
+	.subject{
+		padding-bottom: 20px;
+		background-color: #000000;
+	}
+	.subject .title{
+		color: #ffb911;
+		font-size: 20px;
+		padding-bottom: 10px;
+	}
+	.subject .content{
+		color: white;
+		font-size: 13px;
+	}
+</style>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url(
+    'section',
+    array(
+        'action' => 'editserviceoptioninfo',
+        'id'     => $this->id,
+    )
+));
+$form->prepare();
+
+
+echo $this->form()->openTag($form);
+echo '<div style="height:350px;">';
+echo $this->formHidden($form->get('id'));
+echo $this->formHidden($form->get('shop_id'));
+echo $this->formHidden($form->get('name'));
+echo $this->formHidden($form->get('type'));
+echo $this->formHidden($form->get('flag'));
+echo stripslashes($this->formElement($form->get('content')));
+echo '</div>';
+echo $this->formSubmit($form->get('submit'));
+?>
+<a href="<?php echo $this->url('section',
+        array('action'=>'serviceinfo',));?>"><input type = "button" value = "Cancel" /></a>
+<?php
+echo $this->form()->closeTag();
+?>

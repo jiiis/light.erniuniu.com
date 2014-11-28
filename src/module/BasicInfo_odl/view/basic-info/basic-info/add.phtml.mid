@@ -1,0 +1,36 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+
+<?php
+
+$title = 'Add basic Information for new shop';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url('shopinfo', array('action' => 'add')));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+echo $this->formHidden($form->get('id'));
+echo $this->formHidden($form->get('shop_id'));
+echo $this->formHidden($form->get('type'));
+
+echo $this->formRow($form->get('name'));
+echo $this->formRow($form->get('email'));
+echo $this->formRow($form->get('phone'));
+echo $this->formRow($form->get('address'));
+echo $this->formRow($form->get('longitude'));
+echo $this->formRow($form->get('lattitude'));
+echo $this->formSubmit($form->get('submit'));
+
+echo $this->form()->closeTag();
+<?php ENDIF ?>

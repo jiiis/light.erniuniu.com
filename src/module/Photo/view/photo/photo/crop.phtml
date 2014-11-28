@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<?php 
+	echo $this->headLink()
+			->prependStylesheet($this->basePath()."/frontend/plugins/jcrop/css/main.css")
+			->prependStylesheet($this->basePath()."/frontend/plugins/jcrop/css/demos.css")
+			->prependStylesheet($this->basePath()."/frontend/plugins/jcrop/css/jquery.Jcrop.css");
+	echo $this->headScript()
+			->prependFile($this->basePath()."/frontend/plugins/jcrop/js/jquery.color.js")
+		//	->prependFile($this->basePath()."/frontend/plugins/jcrop/js/jquery.min.js")
+			->prependFile($this->basePath()."/frontend/plugins/jcrop/js/jquery.Jcrop.js");	
+?>
+
+<style>
+	div.jc-demo-box{
+		min-height: 450px;
+	}
+</style>
+
+<script>
+	jQuery(function($){
+		// Create variables (in this scope) to hold the API and image size
+		var jcrop_api,
+			boundx, // real image size
+			boundy,
+
+			// Grab some information about the preview pane
+			$preview = $('#preview-pane'),
+			$pcnt = $('#preview-pane .preview-container'),
+			$pimg = $('#preview-pane .preview-container img'),
+
+			xsize = $pcnt.width(), // preview的图片显示大小
+			ysize = $pcnt.height();
+			
+		console.log('init',[xsize,ysize]);
+		$('#target').Jcrop({
+			boxWidth: 600,
+			boxHeight: 600,
+			bgColor: '#000',
+			bgOpacity: 0.4,
+			setSelect: [50, 50, 50+250, 50+354], // preview-container: 250px * 354px
+		//	setSelect: [10, 10, 1280, 1213], // preview-container: 250px * 354px
+			addClass: 'jcrop-dark',
+			onChange: updatePreview,
+			onSelect: updatePreview,
+			aspectRatio: xsize / ysize
+		},function(){
+			// Use the API to get the real image size
+			var bounds = this.getBounds();
+			boundx = bounds[0];
+			boundy = bounds[1];
+			// Store the API in the jcrop_api variable
+			jcrop_api = this;
+		//	jcrop_api.setSelect([130,65,130+350,65+285]);
+			jcrop_api.setOptions({ bgFade: true });
+			jcrop_api.ui.selection.addClass('jcrop-selection');
+
+			// Move the preview into the jcrop container for css positioning
+			$preview.appendTo(jcrop_api.ui.holder);
+		});
+		
+		function updatePreview(c)
+		{
+			if (parseInt(c.w) > 0)
+			{
+				var rx = xsize / c.w; // 选择区域大小
+				var ry = ysize / c.h;
+				
+				$pimg.css({
+					width: Math.round(rx * boundx) + 'px',
+					height: Math.round(ry * boundy) + 'px',
+					marginLeft: '-' + Math.round(rx * c.x) + 'px',
+					marginTop: '-' + Math.round(ry * c.y) + 'px'
+				});
+				
+				//  图片真实大小
+				function getImageWidth(ig){ 
+					with(new Image){ 
+					src = ig.src;   
+					return width; 
+					} 
+				}
+				function getImageHeight(ig){ 
+					with(new Image){ 
+					src = ig.src;   
+					return height; 
+					} 
+				}
+				
+			//	var real_width = getImageWidth($("img#target")[0]);
+				var real_width = $("img#target")[0].naturalWidth;
+				var rate_real_bound = real_width / boundx;
+				
+				jQuery('#x').val(c.x * rate_real_bound);
+				jQuery('#y').val(c.y * rate_real_bound);
+				jQuery('#w').val(c.w * rate_real_bound);
+				jQuery('#h').val(c.h * rate_real_bound);
+			}
+		};
+
+		function checkCoords()
+		{
+			if (parseInt(jQuery('#w').val())>0) return true;
+			alert('Please select a crop region then press "Crop Image".');
+			return false;
+		};
+	});
+</script>
+
+<style type="text/css">
+	/* Apply these styles only when #preview-pane has
+	   been placed within the Jcrop widget */
+	.jcrop-holder #preview-pane {
+		display: block;
+		position: absolute;
+	/*	z-index: 2000;*/
+		top: 0px;
+		right: -280px;
+		padding: 6px;
+		border: 1px rgba(0,0,0,.4) solid;
+		background-color: #fff;
+
+		-webkit-border-radius: 6px;
+		-moz-border-radius: 6px;
+		border-radius: 6px;
+
+		-webkit-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+		-moz-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+		box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+	}
+
+	/* The Javascript code will set the aspect ratio of the crop
+	   area based on the size of the thumbnail preview,
+	   specified here */
+	#preview-pane .preview-container {
+		width: 250px;
+		height: 354px;
+		overflow: hidden;
+	}
+</style>
+
+<?php
+	$title = "Crop ".$girl->name."'s Photo";
+	$this->headTitle($title);
+?>
+
+
+
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:5px;"></div>
+
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<div class="jc-demo-box">
+					<div class="page-header">
+						<form action="/photo/cropthumbpict" method="post" onsubmit="return checkCoords();">
+							<input type="hidden" id="x" name="x" />
+							<input type="hidden" id="y" name="y" />
+							<input type="hidden" id="w" name="w" />
+							<input type="hidden" id="h" name="h" />
+							<input type="hidden" id="photo_id" name="photo_id" value="<?php echo $photo->id ?>" />
+							<input type="submit" value="Crop Image" style="float:left; width: 98px;" />
+							<a href="<?php echo $this->url('photo',
+								array('action'=>'girlphoto', 'id'=>$girl->id, 'param0'=>''));?>"><input style = "margin-top: 0px;" type = "button" value = "Cancel" /></a>
+						</form>
+					</div>
+					
+					<div id = "crop_img_div">
+						<img src="<?php echo $photo->pict_url ?>" id="target" />
+					</div>
+					
+					<div id="preview-pane">
+						<div class="preview-container">
+							<img src="<?php echo $photo->pict_url ?>" class="jcrop-preview" alt="Preview" />
+						</div>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</div>

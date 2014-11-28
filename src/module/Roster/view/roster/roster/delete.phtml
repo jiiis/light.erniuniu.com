@@ -1,0 +1,35 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+
+<?php
+// module/Roster/view/roster/roster/delete.phtml:
+
+$title = 'Delete roster';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<p>Are you sure that you want to delete
+    '<?php echo $this->escapeHtml($roster->title); ?>' by
+    '<?php echo $this->escapeHtml($roster->name); ?>'?
+</p>
+<?php
+$url = $this->url('roster', array(
+    'action' => 'delete',
+    'id'     => $this->id,
+));
+?>
+<form action="<?php echo $url; ?>" method="post">
+<div>
+    <input type="hidden" name="id" value="<?php echo (int) $roster->id; ?>" />
+    <input type="submit" name="del" value="Yes" />
+    <input type="submit" name="del" value="No" />
+</div>
+</form>
+<?php ENDIF ?>

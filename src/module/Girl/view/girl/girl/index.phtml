@@ -1,0 +1,1162 @@
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="/resources/demos/style.css" />
+<!--font-->
+<link href='http://fonts.googleapis.com/css?family=Mr+Dafoe' rel='stylesheet' type='text/css'>
+<?php
+$title = 'Girls Page Maintenance';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+
+<!----------------------------------------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------------------------------------->
+<!----------------------------------------------------------------------------------------------------------->
+
+<!--------------------------------------- Scroll to top ------------------------------------------->
+
+<script src = "/frontend/plugins/scrollToTop/scroll_to_top.js"></script>
+
+<!------------------------------------------------------ block ui ---------------------------------------------------------------->
+
+<script src = "/frontend/plugins/blockui/blockui.js"></script>
+
+<!----------------------------------- CSS ----------------------------------------->
+
+<!--让girl td纵向居中-->
+<style>
+	.table tr th, .table tr td{
+		vertical-align: middle;
+		padding-left: 0px;
+	}
+</style>
+
+<!-------------------------------------------- Tooltips --------------------------------------------------->
+<script>
+	$( document ).tooltip({
+		show:{
+			effect: "slide",
+			delay: 100,
+		},
+		hide:{
+			effect: "slide",
+			delay: 100,
+		},
+		position: {
+			my: "center bottom-15",
+			at: "center top",
+			using: function( position, feedback ) {
+				$( this ).css( position );
+				$( "<div>" )
+				.addClass( "arrow" )
+				.addClass( feedback.vertical )
+				.addClass( feedback.horizontal )
+				.appendTo( this );
+			}
+		}
+	});
+</script>
+
+<style>
+	.ui-tooltip, .arrow:after{
+		background: #fff;
+		border: 1px solid #000;
+	}
+
+	.ui-tooltip{
+		padding: 10px 20px;
+		color: #000;
+		border-radius: 20px;
+		font: bold 11px "Helvetica Neue", Sans-Serif;
+	/*	text-transform: uppercase;*/
+		box-shadow: 0 0 7px black;
+	}
+	
+	.arrow{
+		width: 70px;
+		height: 16px;
+		overflow: hidden;
+		position: absolute;
+		left: 50%;
+		margin-left: -35px;
+		bottom: -16px;
+	}
+	
+	.arrow.top{
+		top: -16px;
+		bottom: auto;
+	}
+	
+	.arrow.left{
+		left: 20%;
+	}
+	
+	.arrow:after{
+		content: "";
+		position: absolute;
+		left: 20px;
+		top: -20px;
+		width: 25px;
+		height: 25px;
+		box-shadow: 6px 5px 9px -9px black;
+		-webkit-transform: rotate(45deg);
+		-moz-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		-o-transform: rotate(45deg);
+		tranform: rotate(45deg);
+	}
+	
+	.arrow.top:after{
+		bottom: -20px;
+		top: auto;
+	}
+</style>
+
+<!----------------------------------------------- Reorder ------------------------------------------------------->
+
+<script language = "javascript">
+	$(function(){
+		$("ul#sortable_ul").sortable({
+		//	placeholder: "ui-state-highlight",
+			forcePlaceholderSize: true,
+			placeholder: {
+				element: function(currentItem) {
+					return $("<li style = 'height: 92px; background: #fff; border: 2px dashed #aaaaaa;'></li>")[0];
+				},
+				update: function(container, p) {
+					return;
+				}
+			},
+			update: function(){
+				var i = 0;
+				var order_array = new Array();
+				$("li", $(this)).each(function(){
+					order_array[i] = $(this).attr("girl_id");
+					i++;
+				});
+				var order_string = order_array.join("-");
+			
+				$.post(
+					"/girl/ajaxReorder",
+					{
+						"order_string": order_string
+					},
+					function(){
+						
+					},
+					'json'
+				);
+				add_index_init();
+			},
+		});
+		$("*").disableSelection();
+		$("ul#sortable_ul").disableSelection();
+		$("ul#sortable_ul *").disableSelection();
+	});
+</script>
+
+<!-------------------------------------------------- Delete ----------------------------------------------------->
+
+<script>
+  var girl_id_delete = 0;
+  var delete_is_locked = false;
+  
+  $(function() {
+	delete_init($("a.delete_girl_opener"));
+  });
+  
+  function delete_init(delete_opener_a){
+	$( "#delete_girl_dialog" ).dialog({
+      autoOpen: false,
+	  resizable: false,
+	  modal:true,
+	  buttons: {
+        "Delete": function() {
+			var girl_id_temp = girl_id_delete;
+			$( this ).dialog( "close" );
+			
+			$("div.waiting div.please_wait").html("We are deleting the girl.<br />Please wait...");
+			$.blockUI({
+				message: $("div.waiting"),
+				css: {
+					width: '400px',
+					height: '70px',
+					border: 'none', 
+					padding: '15px', 
+					backgroundColor: '#000',
+					'-webkit-border-radius': '10px', 
+					'-moz-border-radius': '10px', 
+					opacity: .8, 
+					color: '#fff' 
+				}
+			});
+			
+			$.post(
+				"/girl/ajaxdelete", 
+				{"girl_id":girl_id_temp},
+				function(data){
+					// 删除photo（数据库和文件）
+					$.post(
+						"/photo/ajaxaftergirldelete",
+						{
+							"girl_id": girl_id_temp
+						},
+						function(data){
+						},
+						'json'
+					);
+					
+					// 删除notice
+					$.post(
+						"/notice/ajaxDelete",
+						{
+							"link_id": girl_id_temp,
+							"type": 1
+						},
+						function(data){},
+						'json'
+					);
+					
+					$("h4:first", $("div.growlUI")).text(data.girl_name + " was successfully deleted.");
+					$("h4:last", $("div.growlUI")).text("Well done!");
+					$("div.growlUI").css("background", "url(/frontend/images/check_2.png) no-repeat 10px 0px");
+					$.blockUI({
+						message: $("div.growlUI"), 
+						fadeIn: 700, 
+						fadeOut: 700, 
+						timeout: 3000, 
+						showOverlay: false,
+						centerY: false, 
+						css: { 
+							width: 'auto',
+							top: '50px', 
+							left: '', 
+							right: '10px', 
+							border: 'none', 
+							padding: '5px', 
+							backgroundColor: '#000', 
+							'-webkit-border-radius': '10px', 
+							'-moz-border-radius': '10px', 
+							opacity: .8, 
+							color: '#fff' 
+						} 
+					});
+					
+					$("ul#sortable_ul li[girl_id=" + girl_id_temp + "]").hide(1000, function(){
+						$("ul#sortable_ul li[girl_id=" + girl_id_temp + "]").remove();
+						add_index_init();
+						delete_is_locked = false;
+					});
+				},
+				'json'
+			);
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      },
+      show: {
+        effect: "shake",
+        duration: 300
+      },
+      hide: {
+        effect: "explode",
+        duration: 500
+      },
+	  beforeClose: function(){
+		delete_is_locked = false;
+		$("ul#sortable_ul li[girl_id=" + girl_id_delete + "]").animate({
+			backgroundColor: "#c0c0c0",
+			color: "#000",
+		}, 1000);
+	  }
+    });
+ 
+    delete_opener_a.click(function(e) {
+		e.preventDefault();
+		if(!delete_is_locked){
+			delete_is_locked = true;
+			$( "#delete_girl_dialog" ).dialog( "open" );
+			girl_id_delete = $(this).attr("girl_id");
+			$("ul#sortable_ul li[girl_id=" + girl_id_delete + "]").animate({
+				backgroundColor: "#aa0000",
+				color: "#fff",
+			}, 1000);
+		}
+    });
+  }
+</script>
+
+<!--删除对话框-->
+<div id="delete_girl_dialog" title="Delete girl" style = "display: none;">
+  <p>Sure you wanna delete the girl?</p>
+</div>
+
+<!------------------------------------------------- Text Edit ------------------------------------------------------->
+
+<script>
+	var girl_id_edit = 0;
+	var text_value_edit = null;
+	var is_locked = false;
+	
+	$(function(){
+		edit_text_init($("span.girl_name_span"), "name");
+		edit_text_init($("span.girl_age_span"), "age");
+		edit_text_init($("span.girl_nationality_span"), "nationality");
+		edit_text_init($("span.girl_description_span"), "description");
+	});
+	
+	function edit_text_init(edit_dblclick_span, text_key_edit){
+		$("span", edit_dblclick_span).dblclick(function(){
+			if(!is_locked){
+				is_locked = true;
+				girl_id_edit = $(this).parent().attr("girlid");
+				var span_now = null;
+				switch(text_key_edit){
+					case "name":
+						span_now = $("span.girl_name_span[girlid=" + girl_id_edit + "]");
+						break;
+					case "age":
+						span_now = $("span.girl_age_span[girlid=" + girl_id_edit + "]");
+						break;
+					case "nationality":
+						span_now = $("span.girl_nationality_span[girlid=" + girl_id_edit + "]");
+						break;
+					case "description":
+						span_now = $("span.girl_description_span[girlid=" + girl_id_edit + "]");
+						break;
+				}
+				
+				$(this).css("display", "none");
+				$(this).siblings(":input").css("display", "").val($.trim($(this).text()))
+				.focus()
+				.blur(function(){
+					var text_value = $.trim($(this).val().replace(/\r\n/gi, "<br />"));
+					if(text_value){
+						text_value_edit = text_value;
+						$("img", span_now).css("display", "");
+						
+						$.post(
+							"/girl/ajaxEditText",
+							{
+								"girl_id": girl_id_edit,
+								"text_key": text_key_edit,
+								"text_value": text_value_edit
+							},
+							function(data){
+								$("img", span_now).css("display", "none");
+								$(":input", span_now).css("display", "none");
+								$("span", span_now).text(data.new_text).css("display", "");
+								
+								is_locked = false;
+							},
+							'json'
+						);
+						
+						return;
+					}
+					// 如果输入为空，则不发送ajax请求，而是直接显示原值
+					$(this).css("display", "none");
+					$(this).siblings("span").css("display", "inline");
+					is_locked = false;
+				});
+			}
+		});
+	}
+</script>
+
+<!---------------------------------------------------- Star Text Edit ---------------------------------------------------->
+
+<script>
+	var star_text_edit = null;
+
+	$(function(){
+		edit_star_init($("div.star_div"));
+	});
+
+	function edit_star_init(star_div_obj){
+		$("div.star_text_div", star_div_obj).dblclick(function(){
+			if(!is_locked){
+				is_locked = true;
+				girl_id_edit = $(this).attr("girlid");
+				$(this).css("display", "none");
+				$("input.star_input[girlid=" + girl_id_edit + "]", star_div_obj).css("display", "").val($.trim($(this).text()))
+				.focus()
+				.blur(function(){
+					var star_text_tmp = $.trim($(this).val());
+					if(star_text_tmp){
+						star_text_edit = star_text_tmp;
+						$("input.star_input[girlid=" + girl_id_edit + "]", star_div_obj).text(star_text_tmp);
+						$("img.star_loading_img[girlid=" + girl_id_edit + "]", star_div_obj).css("display", "");
+						
+						$.post(
+							"/girl/ajaxeditstar", 
+							{
+								"girl_id":girl_id_edit,
+								"star_text":star_text_edit
+							},
+							function(data){
+								$("img.star_loading_img[girlid=" + girl_id_edit + "]", star_div_obj).css("display", "none");
+								$("input.star_input[girlid=" + girl_id_edit + "]", star_div_obj).css("display", "none");
+								$("div.star_text_div[girlid=" + girl_id_edit + "]", star_div_obj).text(data.star_text).css("display", "");
+								is_locked = false;
+							},
+							'json'
+						);
+						
+						return;
+					}
+					$(this).css("display", "none");
+					$("div.star_text_div[girlid=" + girl_id_edit + "]", star_div_obj).css("display", "");
+					is_locked = false;
+				});
+			}
+		});
+	}
+</script>
+
+<!---------------------------------------------------- Add ---------------------------------------------------->
+
+<script>
+	$(function(){
+		var girl_name_input = $("#girl_name");
+		var girl_age_input = $("#girl_age");
+		var girl_nationality_input = $("#girl_nationality");
+		var girl_description_input = $("#girl_description");
+		var allFields = $([]).add(girl_name_input).add(girl_age_input).add(girl_nationality_input).add(girl_description_input);
+		var tips = $(".validateTips");
+		
+		function updateTips( t ){
+			tips
+			.text( t )
+			.addClass( "ui-state-highlight" );
+			setTimeout(function() {
+				tips.removeClass( "ui-state-highlight", 1500 );
+			}, 500 );
+		}
+		
+		function checkLength( o, n, min, max ){
+			if ( o.val().length > max || o.val().length < min ) {
+				o.addClass( "ui-state-error" );
+				updateTips( "Length of " + n + " must be between " + min + " and " + max + "." );
+				return false;
+			}else{
+				return true;
+			}
+		}
+		
+		function checkRegexp( o, regexp, n ){
+			if ( !( regexp.test( o.val() ) ) ) {
+				o.addClass( "ui-state-error" );
+				updateTips( n );
+				return false;
+			}else{
+				return true;
+			}
+		}
+		
+		function checkAge(o, n){
+			if(parseInt(o.val()) < 18){
+				o.addClass( "ui-state-error" );
+				updateTips(n);
+				return false;
+			}else{
+				return true;
+			}
+		}
+		
+		$( "#add_girl_dialog" ).dialog({
+			autoOpen: false,
+			height: 587,
+			width: 380,
+			modal: true,
+			buttons: {
+				"Create a girl": function() {
+					var bValid = true;
+					allFields.removeClass( "ui-state-error" );
+					
+					girl_name_input.val($.trim(girl_name_input.val()));
+					girl_age_input.val($.trim(girl_age_input.val()));
+					girl_nationality_input.val($.trim(girl_nationality_input.val()));
+					girl_description_input.val($.trim(girl_description_input.val()));
+					  
+					bValid = bValid && checkLength(girl_name_input, "girl name", 1, 30);
+					bValid = bValid && checkLength(girl_age_input, "girl age", 1, 2);
+					bValid = bValid && checkRegexp(girl_age_input, /^[1-9][0-9]*$/i, "Please enter a real age.");
+					bValid = bValid && checkAge(girl_age_input, "Please enter a legal age (not less than 18).");
+					bValid = bValid && checkLength(girl_nationality_input, "girl nationality", 1, 30);
+					bValid = bValid && checkLength(girl_description_input, "girl description", 1, 120);
+					
+					if ( bValid ) {
+						$( this ).dialog( "close" );
+				
+						$("#a_create_girl").hide(0);
+						$("#span_create_girl").show(0);
+				
+						$("div.waiting div.please_wait").html("We are adding the new girl.<br />Please wait...");
+						$.blockUI({
+							message: $("div.waiting"),
+							css: {
+								width: '400px',
+								height: '70px',
+								border: 'none', 
+								padding: '15px', 
+								backgroundColor: '#000',
+								'-webkit-border-radius': '10px', 
+								'-moz-border-radius': '10px', 
+								opacity: .8, 
+								color: '#fff' 
+							}
+						});
+				
+						$.post(
+							"/girl/ajaxadd", 
+							{
+								"girl_name":girl_name_input.val(),
+								"girl_age":girl_age_input.val(),
+								"girl_nationality":girl_nationality_input.val(),
+								"girl_description":girl_description_input.val()
+							},
+							function(data){
+								var new_li = $("ul#sortable_ul li:first").clone();
+								
+								$("span.girl_name_target", new_li).text(data.girl_name);
+								$("span.girl_age_target", new_li).text(data.girl_age).attr("title", "Double click to edit " + data.girl_name + "'s age.");
+								$("span.girl_nationality_target", new_li).text(data.girl_nationality).attr("title", "Double click to edit " + data.girl_name + "'s nationality.");
+								$("span.girl_description_target", new_li).text(data.girl_description).attr("title", "Double click to edit " + data.girl_name + "'s description.");
+								
+								$("span.girl_name_span", new_li).attr("girlid", data.new_girl_id);
+								$("span.girl_age_span", new_li).attr("girlid", data.new_girl_id);
+								$("span.girl_nationality_span", new_li).attr("girlid", data.new_girl_id);
+								$("span.girl_description_span", new_li).attr("girlid", data.new_girl_id);
+								
+								$("img.new_star", new_li)
+								.attr("girlid", data.new_girl_id)
+								.attr("is_new", "0")
+								.attr("src", "/frontend/images/new_star_silver.png");
+								
+								$("div.star_div", new_li).attr("girlid", data.new_girl_id);
+								$("div.star_text_div", new_li).attr("girlid", data.new_girl_id).text("new");
+								$("div.star_input_img", new_li).attr("girlid", data.new_girl_id);
+								$("input.star_input", new_li).attr("girlid", data.new_girl_id);
+								$("img.star_loading_img", new_li).attr("girlid", data.new_girl_id);
+								
+								new_li.attr("girl_id", data.new_girl_id);
+								$("a.delete_girl_opener", new_li)
+								.attr("girl_id", data.new_girl_id)
+								.attr("title", "Click to delete " + data.girl_name + ".");
+								$("a.edit_photo_opener", new_li)
+								.attr("href", "/photo/girlphoto/" + data.new_girl_id + "/0")
+								.attr("title", "Click to manage the pictures of " + data.girl_name + ".");
+								$("img.thumb_image", new_li).attr("src", data.thumb_image);
+								
+								$("div.active_tag", new_li)
+								.text("inactive")
+								.addClass("active_tag_inactive")
+								.attr("title", "You've gotta crop the default photo of " + data.girl_name + " to make her active.");
+								
+								$("a.hide_show_opener", new_li).replaceWith("<span style = 'color: #aaa;' title = 'Crop the default photo to enable the function.'>Show</span>");
+								
+								$("ul#sortable_ul").prepend(new_li);
+								new_li.hide();
+								
+								delete_init($("a.delete_girl_opener", new_li));
+								
+								edit_text_init($("span.girl_name_span", new_li), "name");
+								edit_text_init($("span.girl_age_span", new_li), "age");
+								edit_text_init($("span.girl_nationality_span", new_li), "nationality");
+								edit_text_init($("span.girl_description_span", new_li), "description");
+								
+								set_new_init($("img.new_star", new_li));
+								edit_star_init($("div.star_div", new_li));
+								add_index_init();
+								
+								$("h4:first", $("div.growlUI")).text(data.girl_name + " was successfully added.");
+								$("h4:last", $("div.growlUI")).text("Great job!");
+								$("div.growlUI").css("background", "url(/frontend/images/check_2.png) no-repeat 10px 0px");
+								$.blockUI({
+									message: $("div.growlUI"), 
+									fadeIn: 700, 
+									fadeOut: 700, 
+									timeout: 3000, 
+									showOverlay: false,
+									centerY: false, 
+									css: { 
+										width: 'auto',
+										top: '50px', 
+										left: '', 
+										right: '10px', 
+										border: 'none', 
+										padding: '5px', 
+										backgroundColor: '#000', 
+										'-webkit-border-radius': '10px', 
+										'-moz-border-radius': '10px', 
+										opacity: .8, 
+										color: '#fff' 
+									} 
+								});
+								
+								new_li.show(1000, function(){
+									$("#a_create_girl").show(0);
+									$("#span_create_girl").hide(0);
+								});
+								
+								/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+								
+								$.post(
+									"/girl/ajaxAddNotice",
+									{
+										"girl_id": data.new_girl_id,
+										"girl_name": data.girl_name,
+										"girl_age": data.girl_age,
+										"girl_nationality": data.girl_nationality,
+										"girl_description": data.girl_description
+									},
+									function(){},
+									'json'
+								);
+							},
+							'json'
+						);
+					}
+				},
+				Cancel: function(){
+					$( this ).dialog( "close" );
+					$("#a_create_girl").show(0);
+					$("#span_create_girl").hide(0);
+				}
+			},
+			show: {
+				effect: "fold",
+				duration: 700
+			},
+			hide: {
+				effect: "drop",
+				duration: 700
+			},
+			beforeClose: function(){
+				$("#a_create_girl").show(0);
+				$("#span_create_girl").hide(0);
+			},
+			close: function() {
+				allFields.val( "" ).removeClass( "ui-state-error" );
+			}
+		});
+		
+		$("#a_create_girl").click(function(e){
+			e.preventDefault();
+			$(this).hide(0);
+			$("#span_create_girl").show(0);
+			$("#add_girl_dialog").dialog("open");
+			updateTips("All form fields are required.");
+		});
+	});
+</script>
+
+<!--添加对话框-->
+<div id="add_girl_dialog" title="Add a new girl" style = "display: none;">
+  <p class="validateTips">All form fields are required.</p>
+  <form>
+  <fieldset style = "padding:0; border:0; margin-top:25px;">
+    <label for="girl_name" style = "margin-bottom: 0px; padding: 0px; height: 25px;">Girl name</label>
+    <input style = "padding: 0px; margin-top: 0px; margin-bottom:12px; width:95%; padding: .4em;" type="text" name="girl_name" id="girl_name" class="text ui-widget-content ui-corner-all" />
+	<label for="girl_age" style = "margin-bottom: 0px; padding: 0px; height: 25px;">Girl age</label>
+    <input style = "padding: 0px; margin-top: 0px; margin-bottom:12px; width:95%; padding: .4em;" type="text" name="girl_age" id="girl_age" class="text ui-widget-content ui-corner-all" />
+	<label for="girl_nationality" style = "margin-bottom: 0px; padding: 0px; height: 25px;">Girl nationality</label>
+    <input style = "padding: 0px; margin-top: 0px; margin-bottom:12px; width:95%; padding: .4em;" type="text" name="girl_nationality" id="girl_nationality" class="text ui-widget-content ui-corner-all" />
+	<label for="girl_description" style = "margin-bottom: 0px; padding: 0px; height: 25px;">Girl description</label>
+	<textarea maxlength = "400" style = "padding: 0px; margin-top: 0px; margin-bottom:0px; width:95%; height: 140px; padding: .4em;" name="girl_description" id="girl_description" class="text ui-widget-content ui-corner-all" ></textarea>
+  </fieldset>
+  </form>
+</div>
+
+<!------------------------------------------------ new star ------------------------------------------------------>
+
+<script>
+	var girl_id_setnew = 0;
+	
+	$(function(){
+		$("img.new_star[is_new=0]").attr("src", "/frontend/images/new_star_silver.png");
+		$("img.new_star[is_new=1]").attr("src", "/frontend/images/new_star_gold.png");
+		set_new_init($("img.new_star"));
+	});
+	
+	function set_new_init(img_new_star){
+		img_new_star.each(function(){
+			$(this).dblclick(function(){
+				girl_id_setnew = $(this).attr("girlid");
+				$(this).attr("src", "/frontend/images/loading_1.gif");
+				$.post(
+					"/girl/ajaxsetnew", 
+					{
+						"girl_id":girl_id_setnew
+					},
+					function(data){
+						var is_new = parseInt(data.is_new);
+						if(is_new == 0){
+							$("img.new_star[girlid=" + data.girl_id + "]").attr("src", "/frontend/images/new_star_silver.png");
+						}else if(is_new == 1){
+							$("img.new_star[girlid=" + data.girl_id + "]").attr("src", "/frontend/images/new_star_gold.png");
+						}
+					},
+					'json'
+				);
+			});
+		});
+	}
+</script>
+
+<!-------------------------------------------------- Hide ----------------------------------------------------->
+
+<script>
+	$(function(){
+		hide_show_init($("a.hide_show_opener"));
+	});
+	
+	function hide_show_init(hide_show_a){
+		hide_show_a.click(function(e){
+			e.preventDefault();
+			
+			var $current_li = $(this).closest("li");
+			var girl_id = parseInt($current_li.attr("girl_id"));
+			var active_or_inactive = null;
+			var active_or_inactive_after = null;
+			var hide_or_show = null;
+			
+			if($.trim($("a.hide_show_opener", $current_li).text()) == "Hide"){
+				active_or_inactive = "inactive";
+				active_or_inactive_after = "active";
+				hide_or_show = "Show";
+			}else if($.trim($("a.hide_show_opener", $current_li).text()) == "Show"){
+				active_or_inactive = "active";
+				active_or_inactive_after = "inactive";
+				hide_or_show = "Hide";
+			}
+			
+			$("div.waiting div.please_wait").html("We are setting the girl " + active_or_inactive + ".<br />Please wait...");
+			$.blockUI({
+				message: $("div.waiting"),
+				css: {
+					width: '400px',
+					height: '70px',
+					border: 'none', 
+					padding: '15px', 
+					backgroundColor: '#000',
+					'-webkit-border-radius': '10px', 
+					'-moz-border-radius': '10px', 
+					opacity: .8, 
+					color: '#fff'
+				}
+			});
+			
+			$.post(
+				"/girl/ajaxHideShow",
+				{
+					"girl_id": girl_id,
+					"command": active_or_inactive
+				},
+				function(data){
+					if(!data.response){
+						// 这种情况一般不会发生
+						// 当girl页面的girl被设为inactive后，在另一个页面打开该girl的photo页面（girl页面不刷新）
+						// 将一个没有crop的photo设为default
+						// 这时该女孩是不能被再被设为active的
+						// 但是由于girl页面没有刷新，导致了用户仍然可以点击Show，此时就产生了矛盾
+						if(data.status == "cannot_be_active"){
+							$("h4:first", $("div.growlUI")).text(data.girl_name + " cannot be set active.");
+							$("h4:last", $("div.growlUI")).text("You've gotta crop her default photo.");
+							$("div.growlUI").css("background", "url(/frontend/images/cross_2.png) no-repeat 10px 0px");
+							$.blockUI({
+								message: $("div.growlUI"), 
+								fadeIn: 700, 
+								fadeOut: 700, 
+								timeout: 3000, 
+								showOverlay: false,
+								centerY: false, 
+								css: { 
+									width: 'auto',
+									top: '50px', 
+									left: '', 
+									right: '10px', 
+									border: 'none', 
+									padding: '5px', 
+									backgroundColor: '#000', 
+									'-webkit-border-radius': '10px', 
+									'-moz-border-radius': '10px', 
+									opacity: .8, 
+									color: '#fff' 
+								} 
+							});
+						}
+					}else{
+						$("div.active_tag", $current_li)
+						.hide("drop", 300, function(){
+							$(this)
+							.text(active_or_inactive);
+							if($.trim($("a.hide_show_opener", $current_li).text()) == "Hide"){
+								$(this).addClass("active_tag_inactive");
+							}else if($.trim($("a.hide_show_opener", $current_li).text()) == "Show"){
+								$(this).removeClass("active_tag_inactive");
+							}
+						});
+						
+						$("a.hide_show_opener", $current_li)
+						.hide(300, function(){
+							$(this)
+							.text(hide_or_show)
+							.attr("title", "Set " + data.girl_name + " " + active_or_inactive_after + ".");
+						});
+					
+						$("h4:first", $("div.growlUI")).text(data.girl_name + " is " + active_or_inactive + " now.");
+						$("h4:last", $("div.growlUI")).text("Well played!");
+						$("div.growlUI").css("background", "url(/frontend/images/check_2.png) no-repeat 10px 0px");
+						$.blockUI({
+							message: $("div.growlUI"), 
+							fadeIn: 700, 
+							fadeOut: 700, 
+							timeout: 3000, 
+							showOverlay: false,
+							centerY: false, 
+							css: { 
+								width: 'auto',
+								top: '50px', 
+								left: '', 
+								right: '10px', 
+								border: 'none', 
+								padding: '5px', 
+								backgroundColor: '#000', 
+								'-webkit-border-radius': '10px', 
+								'-moz-border-radius': '10px', 
+								opacity: .8, 
+								color: '#fff' 
+							} 
+						});
+						
+						$("div.active_tag", $current_li).show("drop", 300);
+						$("a.hide_show_opener", $current_li).show(300);
+					}
+				},
+				'json'
+			);
+		});
+	}
+</script>
+
+<!------------------------------------------------ Row Number ------------------------------------------------------>
+
+<script>
+	$(function(){
+		add_index_init();
+	});
+
+	function add_index_init(){
+		$("span.row_number").each(function(){
+			$(this).text($(this).closest("li").index() + 1);
+		});
+	}
+</script>
+
+<!------------------------------------------------ HTML ------------------------------------------------------>
+
+<style>
+	div.waiting div{
+		float: left;
+	}
+	
+	div.waiting div.loading{
+		width: 100px;
+		height: 70px;
+	}
+	
+	div.waiting div.please_wait{
+		margin-top: 10px;
+		margin-left: 0px;
+		width: 250px;
+		line-height: 25px;
+		font-size: 16px;
+	}
+	
+	div.loading img{
+		height: 70px;
+	}
+	
+	div.growlUI{
+		background: url(/frontend/images/check_2.png) no-repeat 10px 0px;
+		min-width: 250px;
+	}
+
+	div.growlUI h4{
+		color: white;
+		padding: 0px 20px 0px 75px;
+		text-align: left;
+		font-size: 18px;
+	}
+	
+	span#span_create_girl{
+		display: none;
+		color: #888;
+	}
+	
+	a#a_create_girl{
+		cursor: pointer;
+	}
+</style>
+
+<!--Please wait...-->
+<div class = "waiting" style = "display: none;">
+	<div class = "loading">
+		<img src = "/frontend/images/loading_4.gif" />
+	</div>
+	<div class = "please_wait">
+		We are adding the new girl.<br />Please wait...
+	</div>	
+</div>
+
+<!--growlUI-->
+<div class = "growlUI" style = "display: none;">
+	<h4></h4>
+	<h4></h4>
+</div>
+
+<!--
+<h4>All Ladies</h4>
+-->
+<p>
+	<a id = "a_create_girl" title = "Click to add a new girl.">Add a new girl</a>
+	<span id = "span_create_girl">Add a new girl</span>
+<p>
+
+<table class="table" style = "border-bottom: 0px; margin-bottom: 0px;">
+<tr>
+<th>
+</th>
+</tr>
+<!--
+<tr>
+    <th style="width:5%;">&nbsp;</th>
+    <th style="width:10%;">photo</th>
+    <th style="width:10%;">star</th>
+    <th style="width:10%;">name</th>
+    <th style="width:10%;">age</th>
+    <th style="width:15%;">from</th>
+    <th style="width:30%;">description</th>
+    <th style="width:10%;">operations</th>
+</tr>
+-->
+</table>
+
+<!------------------------------------------------active tag---------------------------------------------------->
+
+<script>
+	$(function(){
+		$("div.active_tag").show("drop", 1000);
+	});
+</script>
+
+<style>
+	ul#sortable_ul li{
+		background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgb(190, 190, 190)), to(rgba(255, 255, 255, 0.5)));
+		margin: 0px;
+		margin-bottom: 5px;
+		-moz-border-radius: 10px;
+		-webkit-border-radius: 10px;
+		border-radius:10px;
+		background-color: #e5e5e5;
+		width: 100%;
+		height: auto;
+		cursor: move;
+		padding: 0px;
+		float: left;
+	}
+	
+	div.active_tag_area{
+		position: absolute;
+		margin-top: -15px;
+		margin-left: 42px;
+	/*	top: -10px;*/
+		width: 30px;
+		
+	}
+	
+	div.for_position{
+		position: absolute;
+	}
+	
+	div.active_tag{
+		display: none;
+		position: absolute;
+		top: 8px;
+		left: -18px;
+		z-index: 100;
+		
+		width: 50px;
+		height: 15px;
+		
+		color: #fff;
+		font-weight: light;
+		font-size: 13px;
+		font-family: 'Sonsie One', cursive;
+		text-align: center;
+		line-height: 15px;
+	/*	background: #cbb174;*/
+		background: rgba(203, 177, 116, 0.8);
+		
+		-moz-border-radius: 2px;
+		-khtml-border-radius: 2px;
+		-webkit-border-radius: 2px;
+		border-radius: 2px;
+		
+		-webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+		-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+		box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+		
+		-webkit-transform: rotate(30deg) skew(0deg);
+		-moz-transform: rotate(30deg) skew(0deg);
+		-o-transform: rotate(30deg) skew(0deg);
+		-ms-transform: rotate(30deg) skew(0deg);
+		transform: rotate(30deg) skewX(0deg);
+	}
+	
+	div.active_tag_inactive{
+		background: rgba(136, 136, 136, 0.8);
+		left: -24px;
+		width: 60px;
+	}
+</style>
+
+<ul id = 'sortable_ul' style = "list-style-type: none; padding: 0px; margin: 0px; min-width: 800px;">
+<?php foreach ($girls as $girl) : ?>
+<li girl_id = "<?php echo $girl->id; ?>" order_num = "<?php echo $girl->order_num; ?>">
+
+<table class = "table" style = "padding: 0px; margin: 0px;">
+	<tr>
+		<!--上下箭头图片 / 序号-->
+		<td style="padding-right: 0px; border: 0px; width: 5%; vertical-align: middle; text-align: center;">
+			<!--
+			<img title = "Drag to reorder girls." src = "/images/arrow_updown_2.png" style = "width: 12px; height: 35px;" />
+			-->
+			<span class = "row_number" style = "font-family: 'Mr Dafoe', cursive; font-size: 20px;" title = "Drag to reorganise girls.">1</span>
+		</td>
+		
+		<!--photo-->
+		<td style="border: 0px; width: 10%;">
+			
+			<div class = "active_tag_area">
+				<!--
+				<img src = "/frontend/images/sun_1.gif" />
+				-->
+				<?php if($girl->is_active){ ?>
+					<div class = "active_tag" title = "<?php echo $girl->name; ?> is visible in your website.">
+						active
+					</div>
+				<?php }else{ ?>
+					<div class = "active_tag active_tag_inactive" title = "You've gotta crop the default photo of <?php echo $girl->name; ?> to make her active.">
+						inactive
+					</div>
+				<?php } ?>
+			</div>
+			
+			<img class = "thumb_image" src="<?php echo $this->escapeHtml($girl->thumb_url);?>" style="height: 80px; width: 58px; -moz-border-radius: 5px; -khtml-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;" />
+		</td>
+		
+		<!--star-->
+		<td style="border: 0px; width: 10%;">
+			<div girlid = "<?php echo $girl->id; ?>" class = "star_div" style = "width: 100%; height: 70px;">
+				<div style = "height: 50px; width: 50%; line-height: 50px;">
+					<img class = "new_star" girlid = "<?php echo $girl->id; ?>" is_new = "<?php echo $girl->is_new; ?>" src="" style="weight: 100%; cursor: pointer;" title = "Double click to set or unset star." />
+				</div>
+				<div girlid = "<?php echo $girl->id; ?>" class = "star_text_div" style = "cursor: pointer; height: 20px; width: 50%; margin-top: 4px; text-align: center; text-transform: uppercase; display: ;" title = "Double click to edit the text within the star.">
+					<?php echo $girl->star_text; ?>
+				</div>
+				<div girlid = "<?php echo $girl->id; ?>" class = "star_input_img"style = "height: 20px; width: 100%; margin-top: 4px; text-align: left; text-transform: uppercase;">
+					<input girlid = "<?php echo $girl->id; ?>" class = "star_input" maxlength = "5" type = "text" style = "margin: 0px; width: 40%; height: 13px; text-transform: uppercase; display: none;" />
+					<img girlid = "<?php echo $girl->id; ?>" class = "star_loading_img" style = 'margin: 0px; padding: 0px; height: 20px; display: none;' src = '/frontend/images/loading_1.gif' />
+				</div>
+			</div>
+		</td>
+		
+		<!--name-->
+		<td style="border: 0px; width: 10%; padding: 0px; text-align: left; margin-left: 10px;">
+			<span class = "girl_name_span" style = "margin: 0px; padding: 0px;" girlid = "<?php echo $girl->id; ?>">
+				<span class = "girl_name_target" title = "Double click to edit the girl's name." style = "cursor: pointer;">
+					<?php echo $this->escapeHtml($girl->name);?>
+				</span>
+				<input maxlength = "30" type = "text" style = "margin: 0px; width: 45%; height: 13px; display: none;" />
+				<img style = 'margin: 0px; padding: 0px; height: 20px; display: none;' src = '/frontend/images/loading_1.gif' />
+			</span>
+		</td>
+		
+		<!--age-->
+		<td style="border: 0px; width: 10%; padding: 0px; text-align: left; margin-left: 10px;">
+			<span class = "girl_age_span" style = "margin: 0px; padding: 0px;" girlid = "<?php echo $girl->id; ?>">
+				<span class = "girl_age_target" title = "Double click to edit <?php echo $girl->name?>'s age." style = "cursor: pointer;">
+					<?php echo $this->escapeHtml($girl->age);?>
+				</span>
+				<input maxlength = "2" type = "text" style = "margin: 0px; width: 40%; height: 13px; display: none;" />
+				<img style = 'margin: 0px; padding: 0px; height: 20px; display: none;' src = '/frontend/images/loading_1.gif' />
+			</span>
+		</td>
+		
+		<!--nationality-->
+		<td style="border: 0px; width: 15%; padding: 0px; text-align: left; margin-left: 10px;">
+			<span class = "girl_nationality_span" style = "margin: 0px; padding: 0px;" girlid = "<?php echo $girl->id; ?>">
+				<span class = "girl_nationality_target" title = "Double click to edit <?php echo $girl->name?>'s nationality." style = "cursor: pointer;">
+					<?php echo $this->escapeHtml($girl->from_nation);?>
+				</span>
+				<input maxlength = "30" type = "text" style = "margin: 0px; width: 60%; height: 13px; display: none;" />
+				<img style = 'margin: 0px; padding: 0px; height: 20px; display: none;' src = '/frontend/images/loading_1.gif' />
+			</span>
+		</td>
+		
+		<!--description-->
+		<td style="border: 0px; width: 33%; padding: 10px 0px; margin-left: 10px;">
+			<span class = "girl_description_span" style = "margin: 0px; padding: 0px;" girlid = "<?php echo $girl->id; ?>">
+				<span class = "girl_description_target" style = "width: 90%; float: left; cursor: pointer;" title = "Double click to edit <?php echo $girl->name?>'s description.">
+					<?php echo $this->escapeHtml($girl->description);?>
+				</span>
+				<textarea maxlength = "120" cols = "700" rows = "3" style = "width: 80%; margin: 0px; display: none;"></textarea>
+				<img style = 'margin: 0px; padding: 0px; height: 20px; display: none;' src = '/frontend/images/loading_1.gif' />
+			</span>
+		</td>
+		
+		<!--operations-->
+		<td style="border: 0px; width: 7%;">
+			<a class = "edit_photo_opener" href="<?php echo $this->url('photo', array('action'=>'girlphoto', 'id' => $girl->id, 'param0' => '0'));?>" title = "Click to manage the photos of <?php echo $girl->name; ?>.">
+				Photos
+			</a>
+			
+			<br />
+			
+			<?php 
+				if(!$girl->can_be_active){ // girl不能为active，default图片没有crop
+					echo "<span style = 'color: #aaa;' title = 'Crop the default photo to enable the function.'>Show</span>";
+				}else{
+					if($girl->is_active){ // girl可以为active，且为active
+						echo "<a class = 'hide_show_opener' href = '' title = 'Set ".$girl->name." inactive.'>Hide</a>";
+					}else{ // girl可以为active，但不为active
+						echo "<a class = 'hide_show_opener' href = '' title = 'Set ".$girl->name." active.'>Show</a>";
+					}
+				}
+			?>
+			
+			<br />
+			
+			<a class = "delete_girl_opener" girl_id = "<?php echo $girl->id ?>" href="" title = "Click to delete <?php echo $girl->name; ?>.">
+				Delete
+			</a>
+		</td>
+	</tr>
+</table>
+
+</li>
+
+<?php endforeach; ?>
+</ul>
+
+&nbsp;
+
+

@@ -1,0 +1,50 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+<style type = "text/css">
+	.subject {
+		padding-bottom: 20px;
+		background-color: #000000;
+	}
+	.subject .title{
+		color: #ffb911;
+		font-size: 20px;
+		padding-bottom: 10px;
+	}
+
+	.subject .content{
+		color: white;
+		font-size: 13px;
+	}
+</style>
+
+<?php
+$title = 'Service Information';
+$this->headTitle($title);
+
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+
+<h4>Service Options</h4>
+<div>
+    <p><?php echo stripslashes($serviceOptionInfo->content); ?></p>
+    <a href="<?php echo $this->url('section',
+        array('action'=>'editserviceoptioninfo', 'id' =>'8'));?>">Edit</a>
+</div>
+<div style="height:10px;"></div>
+<div style="border-top:1px solid black;padding-bottom:20px;"></div>
+
+<h4>Service Girls</h4>
+<div>
+    <p><?php echo stripslashes($serviceGirlInfo->content); ?></p>
+    <a href="<?php echo $this->url('section',
+        array('action'=>'editservicegirlinfo', 'id' =>'9'));?>">Edit</a>
+</div>
+
+<?php ENDIF ?>
+

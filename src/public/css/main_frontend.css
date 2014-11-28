@@ -1,0 +1,472 @@
+*{
+	margin:0;
+	padding:0;	
+}
+
+body {
+	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: black;
+}
+
+/* ~~ Element/tag selectors ~~ */
+ul, ol, dl { /* Due to variations between browsers, it's best practices to zero padding and margin on lists. For consistency, you can either specify the amounts you want here, or on the list items (LI, DT, DD) they contain. Remember that what you do here will cascade to the .nav list unless you write a more specific selector. */
+	padding: 0;
+	margin: 0;
+}
+
+#container{
+	margin: auto;
+	padding: auto;
+	position: relative;
+	width: 1000px;
+	height: 1190px;
+	/* border: 1px solid red; */
+	background-color: black;
+}
+#header{
+	position: relative;
+	width: 100%;
+	height: 500px;
+	margin-bottom: 25px;
+}
+#header_top{
+	width: 100%;
+	height: 190px;
+	z-index: 2;
+	background: url(images/header_top.png) no-repeat;
+}
+#header_bottom{
+	width: 100%;
+	height: 200px;
+	z-index: 3;
+	margin-top: 170px;
+	background: url(images/header_bottom.png) no-repeat;
+}
+nav{
+	position: absolute;
+	top:400px;
+	height: 100px;
+	width: 100%;
+	padding-top: 13px;
+	padding-left: 50px;
+	background: url("images/menu_bg.png") repeat-x;
+}
+
+nav ul{
+	margin-top:2px;
+	margin-left: 0px;
+	padding-left: 0px;
+	list-style: none;
+	height: 100%;
+}
+
+nav ul li{
+	display: block;
+	float: left;
+	padding-right: 5px;
+	height: 100%;
+	width: 130px;
+}
+
+nav a{
+	display: block;
+	height: 100%;
+	text-decoration: none;
+	color:#ffb911;
+	background: url(images/deactive.png) left top no-repeat scroll;
+}
+
+nav a:hover{
+	display: block;
+	height: 100%;
+	text-decoration: none;
+	color:white;
+	background: url(images/active.png) left top no-repeat scroll;
+}
+
+nav .active{
+	display: block;
+	height: 100%;
+	text-decoration: none;
+	color: white;
+	background: url(images/active.png)left top no-repeat scroll;
+}
+nav a span{
+	display: block;
+	position: absolute;
+	top:70px;
+	text-align: center;
+	width: 130px;
+
+}
+
+#header_pict{
+	position: absolute;
+	top:20px;
+	width: 100%;
+	height: 450px;
+}
+
+#two_column{
+	width: 100%;
+	position: relative;
+	height: 580px;
+}
+
+#left{
+	float: left;
+	width: 650px;
+	height: 100%;
+	padding-left: 50px;
+}
+
+#right {
+	position: absolute;
+	left: 730px;
+	width: 220px;
+	height: 100%;
+}
+#section_title{
+	padding-top: 20px;
+	padding-left: 10px;
+	width: 100%;
+	height: 40px;
+	background: url(images/title_bg.jpg);
+	color: #ffb911;
+	margin-bottom: 15px;
+}
+.home_widge{
+	/* border: 2px solid #363636;*/
+	height: 220px;
+	width: 100%;
+	position: relative;
+	background-color: #1a1a1a;
+	color: #ffb911;
+	font-size: 12px;
+
+	border:solid 2px #363636;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+}
+.home_widge .contact{
+	padding-left: 40px;
+	padding-top: 15px;
+	width: 260px;
+	height: 100%;
+	float: left;
+}
+.contact label{
+	display: block;
+	padding-bottom: 3px;
+	line-height: 18px;
+}
+.contact input{
+	width: 250px;
+
+	border:solid 2px #363636;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+.welcome{
+	background: url(images/welcome.png) no-repeat;
+	width: 100%;
+	height: 45px;
+}
+.intro{
+	color: white;
+	margin-left: 20px;
+}
+
+.intro p{
+	padding-bottom: 15px;
+	font-size: 15px;
+}
+#service_pict{
+	padding-left: 20px;
+}
+
+#service_pict img{
+	width: 180px;
+	height: 220px;
+	margin-bottom: 20px;
+	border: 4px solid white;
+}
+
+.home_widge #google-map {
+	position: absolute;
+	left: 330px;
+	width: 300px;
+	height: 200px;
+	margin-top: 11px;
+	z-index: 9999;
+}
+
+footer{
+	background: #1c1c1b;
+	margin-top: 0px;
+	width: 100%;
+	height: 56px;
+	padding-top: 5px;
+	position: relative;
+}
+footer .exchange_link{
+	margin-left: 50px;
+}
+footer .exchange_link .f1{
+	width: 200px;
+	height: 100%;
+	float: left;
+	padding-top: 5px;
+}
+
+footer .exchange_link .f2{
+	width: 200px;
+	height: 100%;
+	float: left;
+	padding-top: 5px;
+	margin-left: 30px;
+}
+
+footer .exchange_link .f3{
+	width: 200px;
+	height: 100%;
+	float: left;
+	padding-top: 10px;
+	margin-left: 0px;
+}
+
+footer .rights_dec{
+	float: left;
+	margin-right: 5px;
+	margin-top: 15px;
+	color :white;
+	font-size: 14px;
+}
+
+/* rates */
+#rates_intro{
+	color: #ffb911;
+}
+.rates_title{
+	width: 320px;
+	height: 23px;
+	float: left;
+	font-weight: bold;
+	padding-left: 20px;
+}
+
+.rates_unit{
+	width: 160px;
+	height: 23px;
+	float: left;
+	font-size: 15px;
+}
+
+.rates_price{
+	width: 140px;
+	height: 23px;
+	float: left;
+	font-size: 15px;
+}
+
+/* employment */
+.employment{
+	background: url(images/employment.png) no-repeat;
+	width: 100%;
+	height: 45px;	
+}
+
+.employ_widge{
+	height: 190px;
+	width: 100%;
+	position: relative;
+	color: #ffb911;
+	font-size: 12px;
+}
+
+.employ_widge .contact{
+	padding-left: 40px;
+	width: 260px;
+	height: 100%;
+	float: left;
+}
+
+.employ_widge .employ_contactleft{
+	padding-top: 5px;
+	width: 295px;
+	height: 160px;
+	float: left;
+	padding-left: 20px;
+	line-height: 18px;
+}
+
+.employ_contactleft .title{
+	color: white;
+	text-decoration: none;
+}
+
+.cont{
+	text-decoration: underline;
+}
+
+.employ_submit{
+	background:none;
+	border:0;
+	color:#ffb911;
+	float:left;
+	display:block;
+	text-decoration: underline;
+	width: 50px;
+	height: 30px;
+	font-size: 16px;
+	padding-left: 180px;
+	padding-top: 5px;
+
+}
+
+/* contact us */
+.disp_box{
+	width: 290px;
+	height: 200px;
+	float: left;
+	font-size: 13px;
+}
+
+#google-map {
+	width: 100%;
+	height: 100%;
+}
+
+#mapthreed {
+	width: 100%;
+	height: 100%;
+}
+
+.shop_name{
+	background: url(images/shop_name.png) no-repeat;
+	width: 100%;
+	height: 45px;
+}
+
+.disp_box .title{
+	color: white;
+	text-decoration: none;
+}
+
+.disp_box input{
+	width: 300px;
+
+	border:solid 2px #363636;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+
+/*service*/
+#one_column{
+	width: 900px;
+	position: relative;
+	height: 950px;
+	margin-left: 50px;
+}
+
+#one_column #left{
+	float: left;
+	width: 230px;
+	height: 850px;
+}
+
+#one_column #right{
+	position: absolute;
+	width: 600px;
+	height: 850px;
+	left: 290px;
+}
+
+.simg{
+	width: 150px;
+	height:190px;
+	border: 4px solid white;
+	margin-bottom: 15px;
+}
+#one_column .subject {
+	padding-bottom: 20px;
+}
+#one_column .subject .title{
+	color: #ffb911;
+	font-size: 20px;
+	padding-bottom: 10px;
+}
+
+#one_column .subject .content{
+	color: white;
+	font-size: 13px;
+}
+
+.gimg{
+	width: 150px;
+	height:190px;
+	border: 4px solid white;
+	margin-bottom: 15px;
+	float: left;
+	margin-right: 40px;
+	margin-left: 0px;
+}
+
+.spict{
+	width: 150px;
+	height: 190px;
+}
+
+/* slide head */
+/*
+#header_pict{
+	position: absolute;
+	top:0px;
+	width: 100%;
+	height: 450px;
+}
+*/
+#slide1{
+    left: 0;    
+    z-index: 30;
+    top:0px;
+    position: absolute;
+    height: 450px;
+    width: 100%;
+    background: url(images/banner01_1.png) no-repeat 0 0;
+}
+
+#slide2{
+    left: 0;    
+    z-index: 30;
+    top:0px;
+    position: absolute;
+    height: 450px;
+    width: 100%;
+    background: url(images/banner02_1.png) no-repeat 0 0px;
+}
+
+#slide3{
+    left: 0;    
+    z-index: 30;
+    top:0px;
+    position: absolute;
+    height: 450px;
+    width: 100%;
+    background: url(images/banner03_1.png) no-repeat 0 0px;
+}
+
+#slide4{
+    left: 0;    
+    z-index: 30;
+    top:0px;
+    position: absolute;
+    height: 450px;
+    width: 100%;
+    background: url(images/banner04_1.png) no-repeat 0 0px;
+}

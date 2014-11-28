@@ -1,0 +1,78 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+<?php
+// module/BasicInfo/view/basicInfo/basicInfo/index.phtml:
+
+$title = 'Shop Information';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+<div>
+    <p style="font-weight:bold;">1.shop information:</p><br>
+    <label>
+        <span> shop name:</span><span style="width:200px;"><?php echo $basicInfo->name ?></span>
+    </label>
+    <label> 
+        <span> phone:</span><span style="width:200px;"><?php echo $basicInfo->phone ?></span>
+    </label>
+    <label>
+        <span> address:</span><span style="width:200px;"><?php echo $basicInfo->address ?></span>
+    </label>
+    <label>
+        <span> latitude:</span><span style="width:200px;"><?php echo $basicInfo->lattitude ?></span>
+        <span> longtitude:</span><span style="width:200px;"><?php echo $basicInfo->longitude ?></span>
+    </label>
+    <a href="<?php echo $this->url('shopinfo',
+        array('action'=>'edit', 'id' => $basicInfo->id));?>">Edit</a>
+</div>
+<div style="border-top:1px solid black;padding-bottom:20px;"></div>
+<div>
+    <p style="font-weight:bold;">2.home page information:</p> 
+    <p><?php echo $homeInfo->content ?></p>
+    <a href="<?php echo $this->url('section',
+        array('action'=>'editbyname', 'id' => $basicInfo->id,'param0' => 'home'));?>">Edit</a>
+</div>
+<div style="border-top:1px solid black;padding-bottom:20px;"></div>
+
+<div>
+    <p style="font-weight:bold;">3.rates page information:</p>
+    <p><?php echo $ratesInfo->content ?></p>
+    <a href="<?php echo $this->url('section',
+        array('action'=>'editbyname', 'id' => $basicInfo->id,'param0' => 'rates'));?>">Edit</a>
+</div>
+<div style="border-top:1px solid black;padding-bottom:20px;"></div>
+
+<div>
+    <p style="font-weight:bold;">4.roster page information:</p>
+    <p><?php echo $rosterInfo->content ?></p>
+    <a href="<?php echo $this->url('section',
+        array('action'=>'editbyname', 'id' => $basicInfo->id,'param0' => 'roster'));?>">Edit</a>
+</div>
+<div style="border-top:1px solid black;padding-bottom:20px;"></div>
+
+<div>
+    <p style="font-weight:bold;">5.employment page information:</p>
+    <p><?php echo $employInfo->content ?></p>
+    <a href="<?php echo $this->url('section',
+        array('action'=>'editbyname', 'id' => $basicInfo->id,'param0' => 'employment'));?>">Edit</a>
+</div>
+<div style="border-top:1px solid black;padding-bottom:20px;"></div>
+
+<?php ENDIF ?>
+
+<?php ENDIF ?>

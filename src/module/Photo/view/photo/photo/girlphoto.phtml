@@ -1,0 +1,1155 @@
+<!--jquery-->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<!--
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+-->
+
+<!--jquerytools.org-->
+<script src = "/frontend/plugins/jquerytools.org/tools.js"></script>
+
+<!--jquery ui-->
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+
+<!--fonts-->
+<link href='http://fonts.googleapis.com/css?family=Sonsie+One' rel='stylesheet' type='text/css' />
+
+<!--block ui-->
+<script src = "/frontend/plugins/blockui/blockui.js"></script>
+
+<style>
+	ul#sortable{
+		list-style-type: none;
+		margin: 0px;
+		padding: 0px;
+	}
+	
+	ul#sortable li{
+		list-style-type: none;
+		float: left;
+	}
+	
+	ul#sortable li div.photo_page_img{
+		cursor: move;
+	}
+	
+	div.active_tag{
+		display: none;
+		position: absolute;
+		top: -80px;
+		left: -20px;
+		z-index: 10000;
+		
+		width: 100px;
+		height: 30px;
+		
+		color: #fff;
+		font-weight: light;
+		font-family: 'Sonsie One', cursive;
+		text-align: center;
+		line-height: 30px;
+	/*	background: #cbb174;*/
+		background: rgba(203, 177, 116, 0.8);
+		
+		-moz-border-radius: 2px;
+		-khtml-border-radius: 2px;
+		-webkit-border-radius: 2px;
+		border-radius: 2px;
+		
+		-webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+		-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+		box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+		
+		-webkit-transform: rotate(-30deg) skew(0deg);
+		-moz-transform: rotate(-30deg) skew(0deg);
+		-o-transform: rotate(-30deg) skew(0deg);
+		-ms-transform: rotate(-30deg) skew(0deg);
+		transform: rotate(-30deg) skewX(0deg);
+	}
+	
+	a#a_create_photo{
+		cursor: pointer;
+	}
+
+	div.photo_page{
+		width: 184px;
+		margin-left: 9px;
+		margin-top: 70px;
+		height: 250px;
+	}
+
+	div.photo_page_img{
+		border: 1px solid #cbb174; /* 金色边框 */
+		width: 182px;
+		height: 200px;
+		line-height: 200px;
+	/*	background-color: #f4c2c2;*/ /* 粉红背景 */
+		background-color: #fff;
+		
+		-moz-border-radius: 5px;
+		-khtml-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+		
+		-webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+		-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+		box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+	}
+	
+	div.photo_page_img img{
+		display: none;
+		max-width: 160px;
+		max-height: 180px;
+	}
+	
+	/* for positioning */
+	
+	div.for_position{
+		position: absolute;
+	}
+	
+	div.photo_page_img{
+		position: absolute;
+	}
+	
+	div.pict_oper{
+		position: absolute;
+		top: 205px;
+		
+		width: 184px;
+	}
+	
+	div.cropped_img{
+		display: none;
+	/*	border: 1px solid #cbb174;*/
+		
+		position: absolute;
+		top: -55px;
+		left: 108px;
+		
+		width: 64px;
+		height: 86px;
+		background: #fff;
+		z-index: 100;
+		
+		-webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+		-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+		box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+		
+		-moz-border-radius: 2px;
+		-khtml-border-radius: 2px;
+		-webkit-border-radius: 2px;
+		border-radius: 2px;
+	}
+	
+	div.cropped_img img{
+		margin: 3px;
+		width: 58px;
+		height: 80px;
+	}
+	
+	div.default_crown{
+		position: absolute;
+		top: -27px;
+		left: -25px;
+		display: none;
+		
+		width: 60px;
+		z-index: 101;
+		
+		-webkit-transform: rotate(-30deg) skew(0deg);
+		-moz-transform: rotate(-30deg) skew(0deg);
+		-o-transform: rotate(-30deg) skew(0deg);
+		-ms-transform: rotate(-30deg) skew(0deg);
+		transform: rotate(-30deg) skewX(0deg);
+	}
+	
+	div.waiting div{
+		float: left;
+	}
+	
+	div.waiting div.loading{
+		width: 100px;
+		height: 70px;
+	}
+	
+	div.waiting div.please_wait{
+		margin-top: 10px;
+		margin-left: 0px;
+		width: 260px;
+		line-height: 25px;
+		font-size: 16px;
+	}
+	
+	div.loading img{
+		height: 70px;
+	}
+	
+	div.growlUI{
+		background: url(/frontend/images/cross_2.png) no-repeat 10px 0px;
+		min-width: 250px;
+	}
+
+	div.growlUI h4{
+		color: white;
+		padding: 0px 20px 0px 75px;
+		text-align: left;
+		font-size: 18px;
+		font-weight: normal;
+	}
+	
+	span#span_create_girl{
+		display: none;
+		color: #888;
+	}
+	
+	a#a_create_girl{
+		cursor: pointer;
+	}
+	
+	div.preview-pane{
+		display: block;
+		position: absolute;
+		top: 0px;
+		right: -280px;
+		padding: 6px;
+		border: 1px rgba(0,0,0,.4) solid;
+		background-color: #fff;
+
+		-webkit-border-radius: 6px;
+		-moz-border-radius: 6px;
+		border-radius: 6px;
+
+		-webkit-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+		-moz-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+		box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+	}
+	
+	div.preview-pane .preview-container{
+		width: 250px;
+		height: 354px;
+		overflow: hidden;
+	}
+	
+	div.page-header{
+		margin-top: 5px;
+		margin-bottom: 25px;
+		border-bottom: 1px solid #aaa;
+	}
+	
+	div.page-header form{
+		margin: 0px;
+		padding-bottom: 10px;
+	}
+	
+	div.crop_block_div{
+		display: none;
+		z-index: 100000;
+		padding: 0px;
+		margin: 0px;
+		background: url(/frontend/images/crop_background.png);
+	}
+	
+	div.jc-demo-box{
+		margin: 0px;
+		width: 780px;
+		height: 575px;
+	/*	min-height: 445px;
+		min-width: 780px;*/ /*重要*/
+		background: rgba(255, 255, 255, 0.3);
+		border: 0px;
+	}
+	
+	input.crop_submit_button, input.crop_cancel_button{
+		width: 85px;
+		background: transparent;
+		border: 1px solid #aaa;
+		color: #aaa;
+	}
+	
+	.ui-tooltip, .arrow:after{
+		background: #fff;
+		border: 1px solid #000;
+	}
+
+	.ui-tooltip{
+		padding: 10px 20px;
+		color: #000;
+		border-radius: 50px;
+		font: bold 11px "Helvetica Neue", Sans-Serif;
+	/*	text-transform: uppercase;*/
+		box-shadow: 0 0 7px black;
+	}
+	
+	.arrow{
+		width: 70px;
+		height: 16px;
+		overflow: hidden;
+		position: absolute;
+		left: 50%;
+		margin-left: -35px;
+		bottom: -16px;
+	}
+	
+	.arrow.top{
+		top: -16px;
+		bottom: auto;
+	}
+	
+	.arrow.left{
+		left: 20%;
+	}
+	
+	.arrow:after{
+		content: "";
+		position: absolute;
+		left: 20px;
+		top: -20px;
+		width: 25px;
+		height: 25px;
+		box-shadow: 6px 5px 9px -9px black;
+		-webkit-transform: rotate(45deg);
+		-moz-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		-o-transform: rotate(45deg);
+		tranform: rotate(45deg);
+	}
+	
+	.arrow.top:after{
+		bottom: -20px;
+		top: auto;
+	}
+	
+	img.add_photo_icon{
+		position: relative;
+		margin: 0px 0px 10px 10px;
+		height: 50px;
+		cursor: pointer;
+	}
+	
+	img.back_icon{
+		position: relative;
+		float: right;
+		margin: 0px 0px 10px 10px;
+		height: 50px;
+		cursor: pointer;
+	}
+	
+	h1.title_h1{
+		min-width: 350px;
+		padding: 0px 0px 0px 25px;
+		margin: 0px 0px 10px 0px;
+		border-bottom: 2px solid #000;
+		font-size: 25px;
+	}
+	
+	div.navbar{
+		min-width: 400px;
+	}
+	
+</style>
+
+<!------------------------------------------------------ Reorder -------------------------------------------------------->
+
+<script>
+	$(function(){
+		$("ul#sortable").sortable({
+			update: function(){
+				var i = 0;
+				var order_array = new Array();
+				$("li", $(this)).each(function(){
+					order_array[i] = $(this).attr("photo_id");
+					i++;
+				});
+				var order_string = order_array.join("-");
+				
+				$.post(
+					"/photo/ajaxReorder",
+					{
+						"order_string": order_string
+					},
+					function(){
+						$("h4:first", $("div.growlUI")).text("You've successfully reorder the photos.");
+						$("h4:last", $("div.growlUI")).text("Have fun!");
+						$("div.growlUI").css("background", "url(/frontend/images/check_2.png) no-repeat 10px 0px");
+						
+						$.blockUI({
+							message: $("div.growlUI"), 
+							fadeIn: 700, 
+							fadeOut: 700, 
+							timeout: 3000, 
+							showOverlay: false,
+							centerY: false, 
+							css: { 
+								width: 'auto',
+								top: '50px', 
+								left: '', 
+								right: '10px', 
+								border: 'none', 
+								padding: '5px', 
+								backgroundColor: '#000', 
+								'-webkit-border-radius': '10px', 
+								'-moz-border-radius': '10px', 
+								opacity: .8, 
+								color: '#fff' 
+							} 
+						});
+					},
+					'json'
+				);
+			}
+		});
+		$("*").disableSelection();
+	});
+</script>
+
+<!------------------------------------------- Message --------------------------------------------------->
+<?php if($message): ?>
+	<script>
+		$(function(){
+			<?php if($message == "upload_type_error"){ ?>
+				$("h4:first", $("div.growlUI")).text("You were trying to upload a file");
+				$("h4:last", $("div.growlUI")).text("that was not of JPEG or PNG format.");
+				$("div.growlUI").css("background", "url(/frontend/images/cross_2.png) no-repeat 10px 0px");
+			<?php }elseif($message == "upload_ok"){ ?>
+				$("h4:first", $("div.growlUI")).text("The new photo was successfully added.");
+				$("h4:last", $("div.growlUI")).text("Nicely played!");
+				$("div.growlUI").css("background", "url(/frontend/images/check_2.png) no-repeat 10px 0px");
+			<?php }elseif($message == "crop_ok"){ ?>
+				$("h4:first", $("div.growlUI")).text("The photo was successfully cropped.");
+				$("h4:last", $("div.growlUI")).text("Have fun!");
+				$("div.growlUI").css("background", "url(/frontend/images/check_2.png) no-repeat 10px 0px");
+			<?php }elseif($message == "default_ok"){ ?>
+				$("h4:first", $("div.growlUI")).text("The default photo was changed.");
+				$("h4:last", $("div.growlUI")).text("Well done!");
+				$("div.growlUI").css("background", "url(/frontend/images/check_2.png) no-repeat 10px 0px");
+			<?php } ?>
+			$.blockUI({
+				message: $("div.growlUI"), 
+				fadeIn: 700, 
+				fadeOut: 700, 
+				timeout: 3000, 
+				showOverlay: false,
+				centerY: false, 
+				css: { 
+					width: 'auto',
+					top: '50px', 
+					left: '', 
+					right: '10px', 
+					border: 'none', 
+					padding: '5px', 
+					backgroundColor: '#000', 
+					'-webkit-border-radius': '10px', 
+					'-moz-border-radius': '10px', 
+					opacity: .8, 
+					color: '#fff' 
+				} 
+			});
+		});
+	</script>
+<?php endif; ?>
+
+<!---------------------------------------------------------- 图片显示动画 ------------------------------------------------------------>
+
+<script>
+	$(function(){
+		$("div.photo_page_img img").fadeIn(2000);
+		$("div.cropped_img").show("slide", 1000);
+		
+		$("div.photo_page[is_default=1]").each(function(){
+			$("div.default_crown", $(this)).show("bounce", 800);
+		});
+		window.setTimeout(function(){
+			$("div.active_tag").show("puff", 500);
+		}, 1000);
+		
+		// 如果inactive
+		if($.trim($("div.active_tag").text()) == "inactive"){
+			$("div.active_tag").css("background", "rgba(136, 136, 136, 0.8)");
+		}
+		
+		// 箭头的点击效果
+		$("img.add_photo_icon, img.back_icon")
+		.mousedown(function(){
+			$(this).css("top", "3px").css("left", "1px");
+		})
+		.mouseup(function(){
+			$(this).css("top", "0px").css("left", "0px");
+		});
+	});
+</script>
+
+<!---------------------------------------------------------- html ---------------------------------------------------------------------------->
+
+<?php 
+$title = $girl->name."'s Photos";
+$this->headTitle($title);
+?>
+
+<!-- active tag -->
+
+<h1 class = "title_h1">
+	<?php echo $this->escapeHtml($title); ?>
+	<a id = "a_create_photo" title = "Add a photo for <?php echo $girl->name; ?>.">
+		<img class = "add_photo_icon" src = "/frontend/images/add_5.png" />
+	</a>
+	<a href = "<?php echo $this->url('girl', array('action'=>'index')); ?>">
+		<img class = "back_icon" src = "/frontend/images/back_to_girls.png" />
+	</a>
+</h1>
+<!--
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+<p>
+    <a id = "a_create_photo" title = "Add a photo for <?php echo $girl->name; ?>.">Add a new photo</a>
+</p>
+-->
+
+<!--Please wait...-->
+<div class = "waiting" style = "display: none;">
+	<div class = "loading">
+		<img src = "/frontend/images/loading_4.gif" />
+	</div>
+	<div class = "please_wait">
+		We are adding the new girl.<br />Please wait...
+	</div>	
+</div>
+
+<!--growlUI-->
+<div class = "growlUI" style = "display: none;">
+	<h4></h4>
+	<h4></h4>
+</div>
+
+<section id="photo" style = "height: auto;">
+    <section class = "photo_list" style = "height: auto;">
+		<!-- crown tag -->
+		<?php 
+			if($girl->is_active){
+		?>
+			<div class = "active_tag" title = "<?php echo $girl->name; ?> is visible in your website.">
+				active
+			</div>
+		<?php
+			}else{
+		?>
+			<div class = "active_tag" title = "You have to crop the default to make <?php echo $girl->name; ?> active.">
+				inactive
+			</div>
+		<?php
+			}
+		?>
+		
+		<ul id = "sortable">
+        <?php foreach ($photos as $photo): ?>
+			<li photo_id = "<?php echo $photo->id; ?>">
+				<!----- block部分 ---->
+				<div class = "crop_block_div" id = "block_<?php echo $photo->id; ?>">
+					<div class = "jc-demo-box">
+						<div class = "page-header">
+							<form action="/photo/cropRedirect" method="post">
+								<input type="hidden" class="x" name="x" />
+								<input type="hidden" class="y" name="y" />
+								<input type="hidden" class="w" name="w" />
+								<input type="hidden" class="h" name="h" />
+								<input type="hidden" class="photo_id" name = "photo_id" value = "<?php echo $photo->id; ?>" />
+								<input class = "crop_submit_button" type="submit" value="Submit" />
+								<input class = "crop_cancel_button" type = "button" value = "Cancel" />
+							</form>
+						</div>
+						
+						<div>
+							<img src = "<?php echo $photo->pict_url; ?>" class = "target" />
+						</div>
+						
+						<div class="preview-pane">
+							<div class="preview-container">
+								<img src="<?php echo $photo->pict_url; ?>" class="jcrop-preview" />
+							</div>
+						</div>
+					</div>
+				</div>
+			
+				<!--- 显示部分 --->
+				<div class="photo_page" photo_id = "<?php echo $photo->id; ?>" is_default = "<?php echo $photo->isfirstshow; ?>">
+					<div class = "for_position">
+						<a href="<?php echo $this->url('photo', array('action'=>'crop','id'=>$photo->id));?>" title = "Crop or recrop the photo.">
+							<div class = "cropped_img">
+								<?php if(!$photo->is_cropped){ ?>
+									<img src = "<?php echo $photo->thumb_url; ?>" title = "No cropped photo. Click to crop." />
+								<?php }else{ ?>
+									<img src = "<?php echo $photo->thumb_url; ?>" title = "Cropped photo. Click to recrop." />
+								<?php } ?>
+							</div>
+						</a>
+						<div class = "default_crown">
+							<img src = "/frontend/images/default_crown_gold.png" title = "Default photo for <?php echo $girl->name; ?>.">
+						</div>
+						
+						<div class="photo_page_img" title = "Drag to reorganise photos.">
+							<img src="<?php echo $photo->pict_url; ?>"  alt="<?php echo $photo->id; ?>" title = "Origninal photo." />
+						</div>
+						<div class="pict_oper"> 
+							<div style="float: left; margin-left: 25px;">
+								<a class = "a_crop" rel = "#block_<?php echo $photo->id; ?>" photo_id = "<?php echo $photo->id; ?>" href="<?php echo $this->url('photo', array('action'=>'crop','id'=>$photo->id));?>" title = "Crop or recrop the photo.">Crop</a>
+							</div>
+							<div style="float: left; margin-left: 10px;">
+								<?php
+									if($photo->isfirstshow == 0){
+									//	if($photo->thumb_url == "")
+								?>
+									<a class = "a_set_default" href="<?php echo $this->url('photo', array('action'=>'setFirstShow','id'=>$photo->id));?>" title = "Set as <?php echo $girl->name; ?>'s default photo.">Default</a>
+								<?php }else{ ?>
+									<span style = "color: #888;" title = "Already default.">Default</span>
+								<?php } ?>
+							</div>
+							<div style="float: left; margin-left: 10px;">
+								<?php if($photo->isfirstshow == 0){ ?>
+									<a photo_id = "<?php echo $photo->id; ?>" class = "delete_photo_opener" href="">Delete</a>
+								<?php }else{ ?>
+									<span style = "color: #888;" title = "Can't delete a default photo.">Delete</span>
+								<?php } ?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+        <?php endforeach; ?>
+		</ul>
+		
+		<div style = "clear: both;"></div>
+    </section>
+</section>
+
+<!-------------------------------------------------------- Crop ------------------------------------------------------->
+
+<?php 
+	echo $this->headLink()
+		//	->prependStylesheet($this->basePath()."/frontend/plugins/jcrop/css/main.css")
+			->prependStylesheet($this->basePath()."/frontend/plugins/jcrop/css/demos.css")
+			->prependStylesheet($this->basePath()."/frontend/plugins/jcrop/css/jquery.Jcrop.css");
+	echo $this->headScript()
+			->prependFile($this->basePath()."/frontend/plugins/jcrop/js/jquery.color.js")
+		//	->prependFile($this->basePath()."/frontend/plugins/jcrop/js/jquery.min.js")
+			->prependFile($this->basePath()."/frontend/plugins/jcrop/js/jquery.Jcrop.js");	
+?>
+
+<script>
+	$(function(){
+		$("ul#sortable li").each(function(){
+			var jcrop_api,
+				boundx, // real image size
+				boundy,
+
+				// Grab some information about the preview pane
+				$preview = $('div.preview-pane', $(this)),
+				$pcnt = $('div.preview-pane .preview-container', $(this)),
+				$pimg = $('div.preview-pane .preview-container img', $(this)),
+
+				xsize = $pcnt.width(), // preview的图片显示大小
+				ysize = $pcnt.height(),
+				
+				current_li = $(this);
+			
+			console.log('init',[xsize,ysize]);
+			$('img.target', current_li).Jcrop({
+				boxWidth: 500,
+				boxHeight: 500,
+				bgColor: '#000',
+				bgOpacity: 0.4,
+				setSelect: [50, 50, 50+250, 50+354], // preview-container: 250px * 354px
+				addClass: 'jcrop-dark',
+				onChange: updatePreview,
+				onSelect: updatePreview,
+				aspectRatio: xsize / ysize
+			},function(){
+				// Use the API to get the real image size
+				var bounds = this.getBounds();
+				boundx = bounds[0];
+				boundy = bounds[1];
+				
+				// Store the API in the jcrop_api variable
+				jcrop_api = this;
+			//	jcrop_api.setSelect([130,65,130+350,65+285]);
+				jcrop_api.setOptions({ bgFade: true });
+				jcrop_api.ui.selection.addClass('jcrop-selection');
+
+				// Move the preview into the jcrop container for css positioning
+				$preview.appendTo(jcrop_api.ui.holder);
+			});
+			
+			function updatePreview(c)
+			{
+				if (parseInt(c.w) > 0)
+				{
+					var rx = xsize / c.w; // 选择区域大小
+					var ry = ysize / c.h;
+					
+					$pimg.css({
+						width: Math.round(rx * boundx) + 'px',
+						height: Math.round(ry * boundy) + 'px',
+						marginLeft: '-' + Math.round(rx * c.x) + 'px',
+						marginTop: '-' + Math.round(ry * c.y) + 'px'
+					});
+					
+					var real_width = $("img.target", current_li)[0].naturalWidth;
+					var rate_real_bound = real_width / boundx;
+					
+					$('input.x', current_li).val(c.x * rate_real_bound);
+					$('input.y', current_li).val(c.y * rate_real_bound);
+					$('input.w', current_li).val(c.w * rate_real_bound);
+					$('input.h', current_li).val(c.h * rate_real_bound);
+				}
+			};
+			
+			$(":submit", current_li).click(function(e){
+				$("a.a_crop[rel]").each(function(){
+					$(this).overlay().close();
+				});
+				
+				$("div.waiting div.please_wait").html("We are cropping the photo.<br />Please wait...");
+				$.blockUI({
+					message: $("div.waiting"),
+					css: {
+						width: '400px',
+						height: '70px',
+						border: 'none', 
+						padding: '15px', 
+						backgroundColor: '#000',
+						'-webkit-border-radius': '10px', 
+						'-moz-border-radius': '10px', 
+						opacity: .8, 
+						color: '#fff' 
+					}
+				});
+			});
+		});
+	});
+</script>
+
+<script>
+	function overlay_init(){
+		var triggers = $("a.a_crop[rel]")
+		.overlay({
+			effect: 'apple',
+			top: 150,
+			mask: {
+				color: "#000",
+				loadSpeed: 300,
+				opacity: 0.9
+			},
+			closeOnClick: false
+		});
+		
+		$(":button.crop_cancel_button").click(function(){
+			$("a.a_crop[rel]").each(function(){
+				$(this).overlay().close();
+			});
+		});
+	}
+
+	$(function(){
+		overlay_init();
+	});
+</script>
+
+<!-- blockUI的方式，有bug -->
+<!--
+<script>
+	$(function(){
+		$("a.a_crop").each(function(){
+			$(this).click(function(e){
+				e.preventDefault();
+				
+			//	$("div.crop_block_div", $(this).closest("li")).show(1000);
+				
+				var block_top = $(window).height()/2-400 > 0 ? $(window).height()/2-400 : 0;
+				var block_left = $(window).width()/2-450 > 0 ? $(window).width()/2-450 : 0;
+				$.blockUI({
+					message: $("div.crop_block_div", $(this).closest("li")),
+					css: {
+						top: block_top + "px",
+						left: block_left + "px",
+						border: "0px",
+						width: "800px",
+						height: "0px",
+						cursor: "default"
+					},
+					overlayCSS: {
+						backgroundColor: "#000",
+						opacity: 0.75,
+					},
+					iframeSrc: /^https/i.test(window.location.href || '') ? 'javascript:false' : 'about:blank',
+				//	centerX: true,
+				//	centerY: false,
+					cursorReset: "default",
+					allowBodyStretch: true,
+					fadeIn: 500,
+					fadeOut: 500
+				});
+			});
+		});
+		
+		$(":button.crop_cancel_button").click(function(){
+			$.unblockUI();
+		});
+	});
+</script>
+-->
+
+<!------------------------------------------------------ Default ------------------------------------------------->
+
+<script>
+	$(function(){
+		$("a.a_set_default").click(function(){
+			$("div.waiting div.please_wait").html("We are updating the default photo.<br />Please wait...");
+			$.blockUI({
+				message: $("div.waiting"),
+				css: {
+					width: '400px',
+					height: '70px',
+					border: 'none', 
+					padding: '15px', 
+					backgroundColor: '#000',
+					'-webkit-border-radius': '10px', 
+					'-moz-border-radius': '10px', 
+					opacity: .8, 
+					color: '#fff' 
+				}
+			});
+		});
+	});
+</script>
+
+<!-------------------------------------------------- Delete ----------------------------------------------------->
+
+<script>
+  var photo_id_delete = 0;
+  var photo_url_delete = null;
+  var thumb_url_delete = null;
+  
+  $(function() {
+	delete_init($("a.delete_photo_opener"));
+  });
+  
+  function delete_init(delete_opener_a){
+	$( "#delete_photo_dialog" ).dialog({
+      autoOpen: false,
+	  resizable: false,
+	  modal:true,
+	  buttons: {
+        "Delete": function() {
+			var photo_id_temp = photo_id_delete;
+			$(this).dialog( "close" );
+			
+			$("div.waiting div.please_wait").html("We are deleting the photo.<br />Please wait...");
+			$.blockUI({
+				message: $("div.waiting"),
+				css: {
+					width: '400px',
+					height: '70px',
+					border: 'none', 
+					padding: '15px', 
+					backgroundColor: '#000',
+					'-webkit-border-radius': '10px', 
+					'-moz-border-radius': '10px', 
+					opacity: .8, 
+					color: '#fff' 
+				}
+			});
+			
+			$.post(
+				"/photo/ajaxdelete", 
+				{"photo_id": photo_id_temp},
+				function(data){
+					photo_url_delete = data.pict_url;
+					thumb_url_delete = data.thumb_url;
+					
+					// 删除服务器上的文件
+					$.post(
+						"/photo/ajaxafterphotodelete",
+						{
+							"photo_id":photo_id_temp,
+							"photo_url":photo_url_delete,
+							"thumb_url":thumb_url_delete
+						},
+						function(){},
+						'json'
+					);
+					
+					$("h4:first", $("div.growlUI")).text("The photo was successfully deleted.");
+					$("h4:last", $("div.growlUI")).text("Well done!");
+					$("div.growlUI").css("background", "url(/frontend/images/check_2.png) no-repeat 10px 0px");
+					$.blockUI({
+						message: $("div.growlUI"), 
+						fadeIn: 700, 
+						fadeOut: 700, 
+						timeout: 3000, 
+						showOverlay: false,
+						centerY: false, 
+						css: { 
+							width: 'auto',
+							top: '50px', 
+							left: '', 
+							right: '10px', 
+							border: 'none', 
+							padding: '5px', 
+							backgroundColor: '#000', 
+							'-webkit-border-radius': '10px', 
+							'-moz-border-radius': '10px', 
+							opacity: .8, 
+							color: '#fff' 
+						} 
+					});
+					
+				/*	$("div.photo_page[photo_id=" + photo_id_temp + "]").hide(500, function(){
+						$("div.photo_page[photo_id=" + photo_id_temp + "]").remove();
+					});*/
+					
+					$("ul#sortable li[photo_id=" + photo_id_temp + "]").hide(500, function(){
+						$(this).remove();
+					});
+				},
+				'json'
+			);
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      },
+      show: {
+        effect: "shake",
+        duration: 300
+      },
+      hide: {
+        effect: "puff",
+        duration: 500
+      },
+	  beforeClose: function(){
+		$("div.photo_page[photo_id=" + photo_id_delete + "] div.photo_page_img").animate({
+		//	backgroundColor: "#f4c2c2",
+			backgroundColor: "#fff",
+			color: "#000",
+		}, 1000);
+	  }
+    });
+ 
+    delete_opener_a.click(function(e) {
+	  e.preventDefault();
+      $( "#delete_photo_dialog" ).dialog( "open" );
+ 	  photo_id_delete = $(this).attr("photo_id");
+	  $("div.photo_page[photo_id=" + photo_id_delete + "] div.photo_page_img").animate({
+			backgroundColor: "#aa0000",
+			color: "#fff",
+		}, 1000);
+    });
+  }
+</script>
+
+<!--删除对话框-->
+<div id="delete_photo_dialog" title="Delete photo." style = "display: none;">
+  <p>Sure you wanna delete the photo?</p>
+</div>
+
+
+<!---------------------------------------------------- Add ---------------------------------------------------->
+
+<script>
+	$(function(){
+		var photo_file_input = $("#fileupload");
+		var allFields = $([]).add(photo_file_input);
+		var tips = $(".validateTips");
+		
+		$(":file#fileupload").change(function(){
+			$(":file#fileupload").removeClass("ui-state-error");
+			updateTips("You have selected a photo.");
+		});
+		
+		function updateTips( t ) {
+		  tips
+			.html( t )
+			.addClass( "ui-state-highlight" );
+			setTimeout(function() {
+				tips.removeClass( "ui-state-highlight", 1500 );
+			}, 500 );
+		}
+		
+		$( "#add_photo_dialog" ).dialog({
+		  autoOpen: false,
+		  height: 277,
+		  width: 380,
+		  modal: true,
+		  buttons: {
+			"Create a photo": function() {
+			  var bValid = true;
+			  allFields.removeClass( "ui-state-error" );
+			
+				// 判断文件是否为空
+				if(!$(":file#fileupload").val()){
+					$(":file#fileupload").addClass( "ui-state-error" );
+					updateTips("You must select a photo to upload.");
+					return false;
+				}
+				
+				// 判断文件格式
+				var f = document.getElementById("fileupload").value;
+				if(!/\.(jpg|jpeg|png)$/.test(f.toLowerCase())){
+					$(":file#fileupload").addClass( "ui-state-error" );
+					updateTips("Photo format must be JPG or PNG.");
+					return false;
+				}
+				
+				// 判断文件大小
+				var isIE = /msie/i.test(navigator.userAgent) && !window.opera;
+				var sizeLabel = ["B", "KB", "MB", "GB"];
+				var file_size_bytes = parseInt(fileChange($(":file#fileupload").get(0)));
+				var file_size_real = calFileSize(file_size_bytes);
+				function fileChange(target) {
+					var fileSize = 0;
+					if (isIE && !target.files) {
+						var filePath = target.value;
+						var fileSystem = new ActiveXObject("Scripting.FileSystemObject");   
+						var file = fileSystem.GetFile (filePath);
+						fileSize = file.Size;
+					} else {
+						fileSize = target.files[0].size;
+					}
+					return fileSize;
+				}
+				function calFileSize(size) {
+					for (var index = 0; index < sizeLabel.length; index++) {
+						if (size < 1024) {
+							return round(size, 2) + sizeLabel[index];
+						}
+						size = size / 1024;
+					}
+					return round(size, 2) + sizeLabel[index];
+				}
+				function round(number, count) {
+					return Math.round(number * Math.pow(10, count)) / Math.pow(10, count);
+				}
+				if(file_size_bytes > 1024 * 500){
+					$(":file#fileupload").addClass( "ui-state-error" );
+					updateTips("The file size can't be larger than 500KB.<br />A file of " + file_size_real + " chosen.");
+					return false;
+				}
+				if(file_size_bytes < 1024 * 20){
+					$(":file#fileupload").addClass( "ui-state-error" );
+					updateTips("The file size can't be smaller than 20KB.<br />A file of " + file_size_real + " chosen.");
+					return false;
+				}
+			
+			// 如果都通过了
+			  if ( bValid ) {
+				$( this ).dialog( "close" );
+				
+				$("div.waiting div.please_wait").html("We are uploading the new photo.<br />Please wait...");
+				$.blockUI({
+					message: $("div.waiting"),
+					css: {
+						width: '400px',
+						height: '70px',
+						border: 'none', 
+						padding: '15px', 
+						backgroundColor: '#000',
+						zIndex: '100010',
+						'-webkit-border-radius': '10px', 
+						'-moz-border-radius': '10px', 
+						opacity: .8, 
+						color: '#fff'
+					}
+				});
+				
+				/*
+				$.post("/photo/ajaxadd", 
+					{"photo_name":photo_name_input.val(),
+					"photo_description":photo_description_input.val()},
+					function(data){
+						var new_li = $("ul#sortable_ul li:first").clone();
+						$("span.photo_name_target", new_li).text(photo_name_input.val());
+						$("span.photo_description_target", new_li).text(photo_description_input.val());
+						$("span.photo_name_span", new_li).attr("photoid", data.new_photo_id);
+						$("span.photo_description_span", new_li).attr("photoid", data.new_photo_id);
+						new_li.attr("photo_id", data.new_photo_id);
+						$("a.delete_photo_opener", new_li).attr("photo_id", data.new_photo_id);
+						$("ul#sortable_ul").prepend(new_li);
+						new_li.hide();
+						new_li.show(1000);
+						
+						delete_init($("a.delete_photo_opener", new_li));
+						edit_name_init($("span.photo_name_span"), new_li);
+						edit_description_init($("span.photo_description_span"), new_li);
+					},
+					'json');
+					*/
+				document.getElementById("add_photo_form").submit();
+			  }
+			},
+			Cancel: function() {
+			  $( this ).dialog( "close" );
+			}
+		  },
+		  show: {
+			effect: "fold",
+			duration: 500
+		  },
+		  hide: {
+			effect: "drop",
+			duration: 500
+		  },
+		  close: function() {
+			allFields.val( "" ).removeClass( "ui-state-error" );
+		  }
+		});
+		
+		$("#a_create_photo").click(function(e){
+			e.preventDefault();
+			$("#add_photo_dialog").dialog("open");
+			updateTips("Please select a photo for <?php echo $girl->name; ?> to update.");
+		});
+	});
+</script>
+
+<!--添加对话框-->
+<div id="add_photo_dialog" title="Add a new photo." style = "display: none;">
+  <p class="validateTips">Please select a photo for <?php echo $girl->name; ?> to update.</p>
+  <form id = "add_photo_form" action = "/photo/uploadfile" method = "post" enctype = "multipart/form-data" style = "margin-bottom: 0px;">
+  <fieldset style = "padding:0; border:0; margin-top:25px;">
+	<input type = "hidden" name = "shop_id" value = "0" />
+	<input type = "hidden" name = "type" value = "0" />
+	<input type = "hidden" name = "link_id" value = "<?php echo $girl->id; ?>" />
+	<input type = "hidden" name = "isfirstshow" value = "0" />
+	<input type = "hidden" name = "order_num" value = "1" />
+	
+    <label for="fileupload" style = "margin-bottom: 0px; padding: 0px; height: 25px;"></label>
+    <input style = "padding: 0px; margin-top: 0px; margin-bottom:12px; width:95%; padding: .4em;" type="file" name="fileupload" id="fileupload" accept = "image/jpeg, image/png" class="text ui-widget-content ui-corner-all" />
+  </fieldset>
+  </form>
+</div>
+
+
+<!------------------------------------ Tooltips -------------------------------------->
+<script>
+	$( document ).tooltip({
+		show:{
+			effect: "slide",
+			delay: 100,
+		},
+		hide:{
+			effect: "slide",
+			delay: 100,
+		},
+		position: {
+			my: "center bottom-15",
+			at: "center top",
+			using: function( position, feedback ) {
+				$( this ).css( position );
+				$( "<div>" )
+				.addClass( "arrow" )
+				.addClass( feedback.vertical )
+				.addClass( feedback.horizontal )
+				.appendTo( this );
+			}
+		}
+	});
+</script>

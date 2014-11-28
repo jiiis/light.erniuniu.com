@@ -1,0 +1,451 @@
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="/resources/demos/style.css" />
+
+<!----------------------------------- CSS ----------------------------------------->
+
+<!--让service td纵向居中-->
+<style>
+	.table tr td{
+		vertical-align: middle;
+	}
+</style>
+
+<!--------------------------------------- Tooltips ------------------------------------------->
+
+<!--Tooltips-->
+<script>
+	$(function(){
+		$(document).tooltip({
+			track: true,
+			show:{
+				effect: "size",
+				delay: 100,
+			},
+			hide:{
+				effect: "clip",
+				delay: 0,
+			},
+		});
+	})
+</script>
+
+<!-------------------------------------------- Ajax Common ---------------------------------------------->
+
+<!--Ajax Common-->
+<script>
+	var xmlHttp = null;
+	
+	function getXmlHttpObject(){
+		var xmlHttpObject = null;
+		try{
+			// FF, Opera 8.0+, Safari, Chrome
+			xmlHttpObject = new XMLHttpRequest();
+		}catch(e){
+			// Internet Explorer
+			try{
+				xmlHttpObject = new ActiveXObject("Msxml2.XMLHTTP");
+			}catch(e){
+				xmlHttpObject = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+		}
+		return xmlHttpObject;
+	}
+</script>
+
+<!----------------------------------------------- Sort ------------------------------------------------------->
+
+<!--Sort Ajax-->
+<script>	
+	function updateOrder(order_string){
+		xmlHttp = getXmlHttpObject();
+		if(xmlHttp){
+			var url = "/service/ajaxreorder/" + Math.floor(Math.random() * 1000) + "/" + order_string;
+			xmlHttp.open("get", url, true);
+			xmlHttp.send(null);
+		}
+	}
+</script>
+
+<!--Sort-->
+<script language = "javascript">
+	$(function(){
+		$("ul#sortable_ul").sortable({
+			update: function(){
+				var i = 0;
+			//	var order_array = new Array(<?php echo count($services); ?>)
+				var order_array = new Array();
+				$("li", $(this)).each(function(){
+					order_array[i] = $(this).attr("service_id");
+					i++;
+				});
+				var order_string = order_array.join("-");
+				updateOrder(order_string);
+			},
+		});
+		$("*").disableSelection();
+		$("ul#sortable_ul").disableSelection();
+		$("ul#sortable_ul *").disableSelection();
+	});
+</script>
+
+<!-------------------------------------------------- Delete ----------------------------------------------------->
+
+<!--js for deleting-->
+<script>
+  var service_id_delete = 0;
+  
+  $(function() {
+	delete_init($("a.delete_service_opener"));
+  });
+  
+  function delete_init(delete_opener_a){
+	$( "#delete_service_dialog" ).dialog({
+      autoOpen: false,
+	  resizable: false,
+	  modal:true,
+	  buttons: {
+        "Delete": function() {
+			$( this ).dialog( "close" );
+			$.post("/service/ajaxdelete", 
+				{"service_id":service_id_delete},
+				function(data){
+					$("ul#sortable_ul li[service_id=" + service_id_delete + "]").animate().hide(1000);
+					window.setTimeout('$("ul#sortable_ul li[service_id=" + service_id_delete + "]").remove()', 1500);
+				},
+				'json');
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      },
+      show: {
+        effect: "shake",
+        duration: 500
+      },
+      hide: {
+        effect: "puff",
+        duration: 1000
+      },
+	  beforeClose: function(){
+		$("ul#sortable_ul li[service_id=" + service_id_delete + "]").animate({
+			backgroundColor: "#c0c0c0",
+			color: "#000",
+		}, 1500);
+	  }
+    });
+ 
+    delete_opener_a.click(function(e) {
+	  e.preventDefault();
+      $( "#delete_service_dialog" ).dialog( "open" );
+ 	  service_id_delete = $(this).attr("service_id");
+	  $("ul#sortable_ul li[service_id=" + service_id_delete + "]").animate({
+			backgroundColor: "#aa0000",
+			color: "#fff",
+		}, 1500);
+    });
+  }
+</script>
+
+<!--删除对话框-->
+<div id="delete_service_dialog" title="Delete service">
+  <p>Sure you wanna delete the service?</p>
+</div>
+
+<!------------------------------------------------- Edit ------------------------------------------------------->
+
+<!--js for editing-->
+<script>
+	var service_id_edit = 0;
+	var service_name_edit = null;
+	var service_description_edit = null;
+	var is_locked = false;
+	
+	// update name ajax请求
+	function updateServiceName(service_id, service_name){
+		xmlHttp = getXmlHttpObject();
+		if(xmlHttp){
+			var url = "/service/ajaxeditname/" + service_id + "/order/" + service_name;
+			xmlHttp.open("get", url, true);
+			xmlHttp.onreadystatechange = callback_name_edit;
+			xmlHttp.send(null);
+			$("img", $("span.service_name_span[serviceid=" + service_id + "]")).css("display", "inline");
+		}
+	}
+	
+	// update name 回调函数
+	function callback_name_edit(){
+		if(xmlHttp.readyState == 4){
+			var span_now = $("span.service_name_span[serviceid=" + service_id_edit + "]");
+			$("img", span_now).css("display", "none");
+			$("input", span_now).css("display", "none");
+			$("span", span_now).text(service_name_edit).css("display", "inline");
+			
+			is_locked = false;
+		}
+	}
+	
+	// update description ajax请求
+	function updateServiceDescription(service_id, service_description){
+		xmlHttp = getXmlHttpObject();
+		if(xmlHttp){
+			var url = "/service/ajaxeditdescription/" + service_id + "/order/" + service_description;
+			xmlHttp.open("get", url, true);
+			xmlHttp.onreadystatechange = callback_description_edit;
+			xmlHttp.send(null);
+			$("img", $("span.service_description_span[serviceid=" + service_id + "]")).css("display", "inline");
+		}
+	}
+	
+	// update description 回调函数
+	function callback_description_edit(){
+		if(xmlHttp.readyState == 4){
+			var span_now = $("span.service_description_span[serviceid=" + service_id_edit + "]");
+			$("img", span_now).css("display", "none");
+			$("textarea", span_now).css("display", "none");
+			$("span", span_now).text(service_description_edit).css("display", "inline");
+			
+			is_locked = false;
+		}
+	}
+	
+	// 双击Service name之后，进行edit
+	// 双击Service description之后，进行edit
+	$(function(){
+		edit_name_init($("span.service_name_span"));
+		edit_description_init($("span.service_description_span"));
+	});
+	
+	function edit_name_init(edit_dblclick_span){
+		$("span", edit_dblclick_span).dblclick(function(){
+			if(!is_locked){
+				is_locked = true;
+				service_id_edit = $(this).parent().attr("serviceid"); 
+				$(this).css("display", "none");
+				$(this).siblings("input").css("display", "inline").val($.trim($(this).text()))
+				.focus()
+				.blur(function(){
+					var service_name = $.trim($(this).val());
+					if(service_name){
+						service_name_edit = service_name;
+						$(this).siblings("span").text($(this).val());
+						updateServiceName(service_id_edit, service_name);
+						return;
+					}
+					// 如果输入为空，则不发送ajax请求，而是直接显示原值
+					$(this).css("display", "none");
+					$(this).siblings("span").css("display", "inline");
+					is_locked = false;
+				});
+			}
+		});
+	}
+	
+	function edit_description_init(edit_dblclick_span){
+		$("span", edit_dblclick_span).dblclick(function(){
+			if(!is_locked){
+				is_locked = true;
+				service_id_edit = $(this).parent().attr("serviceid"); 
+				$(this).css("display", "none");
+				$(this).siblings("textarea").css("display", "inline").val($.trim($(this).text()))
+				.focus()
+				.blur(function(){
+					var service_description = $(this).val().replace(/\r\n/gi, "<br />");
+					if(service_description){
+						service_description_edit = service_description;
+						$(this).siblings("span").text($(this).val());
+						updateServiceDescription(service_id_edit, service_description);
+						return;
+					}
+					// 如果输入为空，则不发送ajax请求，而是直接显示原值
+					$(this).css("display", "none");
+					$(this).siblings("span").css("display", "inline");
+					is_locked = false;
+				});
+			}
+		});
+	}
+</script>
+
+<!---------------------------------------------------- Add ---------------------------------------------------->
+
+<!--js for adding-->
+<script>
+	$(function(){
+		var service_name_input = $("#service_name");
+		var service_description_input = $("#service_description");
+		var allFields = $([]).add(service_name_input).add(service_description_input);
+		var tips = $(".validateTips");
+		
+		function updateTips( t ) {
+		  tips
+			.text( t )
+			.addClass( "ui-state-highlight" );
+		}
+		
+		function checkLength( o, n, min, max ) {
+		  if ( o.val().length > max || o.val().length < min ) {
+			o.addClass( "ui-state-error" );
+			updateTips( "Length of " + n + " must be between " +
+			  min + " and " + max + "." );
+			return false;
+		  } else {
+			return true;
+		  }
+		}
+		
+		function checkRegexp( o, regexp, n ) {
+		  if ( !( regexp.test( o.val() ) ) ) {
+			o.addClass( "ui-state-error" );
+			updateTips( n );
+			return false;
+		  } else {
+			return true;
+		  }
+		}
+		
+		$( "#add_service_dialog" ).dialog({
+		  autoOpen: false,
+		  height: 505,
+		  width: 380,
+		  modal: true,
+		  buttons: {
+			"Create a service": function() {
+			  var bValid = true;
+			  allFields.removeClass( "ui-state-error" );
+	 
+			  bValid = bValid && checkLength( service_name_input, "service name", 1, 49 );
+			  bValid = bValid && checkLength( service_description_input, "service description", 1, 999 );
+			
+			  if ( bValid ) {
+				$( this ).dialog( "close" );
+				
+				$.post("/service/ajaxadd", 
+					{"service_name":service_name_input.val(),
+					"service_description":service_description_input.val()},
+					function(data){
+						var new_li = $("ul#sortable_ul li:first").clone();
+						$("span.service_name_target", new_li).text(service_name_input.val());
+						$("span.service_description_target", new_li).text(service_description_input.val());
+						$("span.service_name_span", new_li).attr("serviceid", data.new_service_id);
+						$("span.service_description_span", new_li).attr("serviceid", data.new_service_id);
+						new_li.attr("service_id", data.new_service_id);
+						$("a.delete_service_opener", new_li).attr("service_id", data.new_service_id);
+						$("ul#sortable_ul").prepend(new_li);
+						new_li.hide();
+						new_li.show(1000);
+						
+						delete_init($("a.delete_service_opener", new_li));
+						edit_name_init($("span.service_name_span"), new_li);
+						edit_description_init($("span.service_description_span"), new_li);
+					},
+					'json');
+			  }
+			},
+			Cancel: function() {
+			  $( this ).dialog( "close" );
+			}
+		  },
+		  show: {
+			effect: "fold",
+			duration: 1000
+		  },
+		  hide: {
+			effect: "drop",
+			duration: 1000
+		  },
+		  close: function() {
+			allFields.val( "" ).removeClass( "ui-state-error" );
+		  }
+		});
+		
+		$("#a_create_service").click(function(e){
+			e.preventDefault();
+			$("#add_service_dialog").dialog("open");
+		});
+	});
+</script>
+
+<!--添加对话框-->
+<div id="add_service_dialog" title="Add a new service">
+  <p class="validateTips">All form fields are required.</p>
+  <form>
+  <fieldset style = "padding:0; border:0; margin-top:25px;">
+    <label for="service_name" style = "margin-bottom: 0px; padding: 0px; height: 25px;">Service name</label>
+    <input style = "padding: 0px; margin-top: 0px; margin-bottom:12px; width:95%; padding: .4em;" type="text" name="service_name" id="service_name" class="text ui-widget-content ui-corner-all" />
+	<label for="service_description" style = "margin-bottom: 0px; padding: 0px; height: 25px;">Service description</label>
+	<textarea style = "padding: 0px; margin-top: 0px; margin-bottom:0px; width:95%; height: 200px; padding: .4em;" name="service_description" id="service_description" class="text ui-widget-content ui-corner-all" ></textarea>
+  </fieldset>
+  </form>
+</div>
+
+<!------------------------------------------------ HTML ------------------------------------------------------>
+
+<!--Title--> 
+<?php
+$title = 'Service Maintenance';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+
+<!--添加service的超级链接-->
+<p>
+    <a id = "a_create_service" href="" title = "Click to create a new service.">Add a new service</a>
+</p>
+
+<!--排序 头-->
+<!--
+<table class="table" style = "border-bottom: 0px; margin-bottom: 0px;">
+	<tr>
+		<th style="width:100px;">&nbsp;</th>
+		<th style="width:200px;">service name</th>
+		<th style="width:600px;">description</th>
+		<th style="width:200px;">&nbsp;</th>
+	</tr>
+</table>
+-->
+
+<!--排序 体-->
+<ul id = 'sortable_ul' style = "list-style-type: none; padding: 0px; margin: 0px;">
+<?php foreach ($services as $service) : ?>
+	<li style = "background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgb(194, 194, 194)), to(rgba(255, 255, 255, 0.5))); margin: 0px; margin-bottom: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius:10px; background-color: #e5e5e5; height: auto; cursor: pointer; padding: 0px; float: left; width: 100%;" service_id = "<?php echo $service->id; ?>">
+	<table class = "table" style = "padding: 0px; margin: 0px;">
+		<tr>
+			<!--上下箭头图片-->
+			<td style="border: 0px; width:40px; vertical-align: middle; text-align: center;">
+				<img title = "Drag to reorder services." src = "/images/arrow_updown_2.png" style = "width: 12px; height: 35px;" />
+			</td>
+			
+			<!--Service name-->
+			<td style="border: 0px; width:180px; padding: 0px; text-align: center; margin-left: 10px;">
+				<span class = "service_name_span" style = "margin: 0px; padding: 0px;" serviceid = "<?php echo $service->id; ?>">
+					<span class = "service_name_target" title = "Double click to edit the service name.">
+						<?php echo $this->escapeHtml($service->name);?>
+					</span>
+					<input maxlength = "49" type = "text" style = "margin: 0px; width: 120px; height: 13px; display: none;" />
+					<img style = 'margin: 0px; padding: 0px; height: 20px; display: none;' src = '/images/loading.gif' />
+				</span>
+			</td>
+			
+			<!--Service description-->
+			<td style="border: 0px; width: 900px; padding: 10px 0px; margin-left: 10px;">
+				<span class = "service_description_span" style = "margin: 0px; padding: 0px;" serviceid = "<?php echo $service->id; ?>">
+					<span class = "service_description_target" title = "Double click to edit the service description.">
+						<?php echo $this->escapeHtml($service->description);?>
+					</span>
+					<textarea maxlength = "999" cols = "700" rows = "4" style = "width: 800px; margin: 0px; display: none;"></textarea>
+					<img style = 'margin: 0px; padding: 0px; height: 20px; display: none;' src = '/images/loading.gif' />
+				</span>
+			</td>
+			
+			<!--Delete超链接-->
+			<td style="border: 0px; width:100;">
+				<a class = "delete_service_opener" service_id = "<?php echo $service->id ?>"  title = "Click to delete <?php echo $service->name; ?>.">Delete</a>
+			</td>
+		</tr>
+	</table>
+	</li>
+<?php endforeach; ?>
+</ul>

@@ -1,0 +1,41 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+
+<div id="photo_add">
+<?php
+	$title = "Add New Photos For $this->girl_name";
+	$this->headTitle($title);
+?>
+	<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+	<br>
+
+<?php
+	$form = $this->form;
+	$form->setAttribute('action',
+	                    $this->url('photo/profile', //your route name ...
+	                        array('controller'=>'photo', 'action' => 'uploadfile'))); 
+	$form->prepare();
+
+	echo $this->form()->openTag($form);
+	echo '<div class="input_area">';
+	// var_dump($form);
+
+	echo $this->formRow($form->get('profilename'));
+	echo $this->formRow($form->get('fileupload'));
+	echo $this->formHidden($form->get('type'));
+	echo $this->formHidden($form->get('link_id'));
+	
+	echo '</div>';
+
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form()->closeTag();
+?>
+</div>
+<?php ENDIF ?>

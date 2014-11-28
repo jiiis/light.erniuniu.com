@@ -1,0 +1,25 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+
+<?php
+// filename : module/Test/view/test/profile/add.phtml
+$form = $this->form;
+$form->setAttribute('action',
+                    $this->url('photo/profile', //your route name ...
+                        array('controller'=>'photo', 'action' => 'uploadfile'))); 
+$form->prepare();
+
+echo $this->form()->openTag($form);
+echo $this->formRow($form->get('profilename'));
+
+echo $this->formRow($form->get('fileupload'));
+
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();
+<?php ENDIF ?>

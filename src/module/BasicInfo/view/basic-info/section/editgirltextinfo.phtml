@@ -1,0 +1,45 @@
+<script src="/ckeditor/ckeditor.js"></script>
+<?php
+// module/Album/view/album/album/edit.phtml:
+
+$title = 'Edit Ladies Text Information';
+$this->headTitle($title);
+?>
+<style type="text/css">
+textarea{
+	width: 700px;
+	height:300px;
+}
+
+#submitbutton{
+	margin-top: 5px;
+}
+</style>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url(
+    'section',
+    array(
+        'action' => 'editgirltextinfo',
+        'id'     => $this->id,
+    )
+));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+echo '<div style="height: auto;">';
+echo $this->formHidden($form->get('id'));
+echo $this->formHidden($form->get('shop_id'));
+echo $this->formHidden($form->get('name'));
+echo $this->formHidden($form->get('type'));
+echo $this->formHidden($form->get('flag'));
+echo stripslashes($this->formElement($form->get('content')));
+echo '</div>';
+echo $this->formSubmit($form->get('submit'));
+?>
+<a href="<?php echo $this->url('girl',
+        array('action'=>'index',));?>"><input style = "margin-top: 5px;" type = "button" value = "Cancel" /></a>
+<?php
+echo $this->form()->closeTag();

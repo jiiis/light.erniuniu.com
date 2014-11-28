@@ -1,0 +1,84 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle('Adult Services Shop Backend System '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0') ?>
+
+        <!-- Le styles -->
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/images/favicon.ico'))
+                     //   ->prependStylesheet($this->basePath() . '/css/jquery.Jcrop.css')
+                        ->prependStylesheet($this->basePath() . '/css/main.css') 
+                        ->prependStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css')
+                        ->prependStylesheet($this->basePath() . '/css/style.css')
+                        ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') 
+                        ?>
+        
+        <!-- my css-->
+
+        <!-- Scripts -->
+        <?php echo $this->headScript()->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+                                      ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+                                 //     ->prependFile($this->basePath() . '/js/jquery.Jcrop.min.js')
+                                      ->prependFile($this->basePath() . '/js/jquery.min.js')
+                                 //     ->prependFile($this->basePath() . '/club185/js/club185.js')
+                                      ?>
+
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Website') ?></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                    <!--    <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Web Site') ?></a></li> -->
+                            <li class="active"><a href="<?php echo $this->url('shopinfo') ?>"><?php echo $this->translate('Shop') ?></a></li>
+							<li class="active"><a href="<?php echo $this->url('section',array('action' => 'homepageinfo')) ?>"><?php echo $this->translate('Home') ?></a></li>
+							<li class="active"><a href="<?php echo $this->url('girl') ?>"><?php echo $this->translate('Girls') ?></a></li>
+							<li class="active"><a href="<?php echo $this->url('ratescat') ?>"><?php echo $this->translate('Rates') ?></a></li>
+							<li class="active"><a href="<?php echo $this->url('roster') ?>"><?php echo $this->translate('Roster') ?></a></li>
+					<!--	<li class="active"><a href="<?php echo $this->url('section',array('action' => 'employmentinfo')) ?>"><?php echo $this->translate('Employment') ?></a></li> -->
+							<li class="active"><a href="<?php echo $this->url('section',array('action' => 'contactusinfo')) ?>"><?php echo $this->translate('Contact Us') ?></a></li>
+					<!--	<li class="active"><a href="<?php echo $this->url('comment') ?>"><?php echo $this->translate('Comments') ?></a></li> -->
+					<!--	<li class="active"><a href="<?php echo $this->url('section',array('action' => 'serviceinfo')) ?>"><?php echo $this->translate('Service') ?></a></li>	-->
+					<!--	<li class="active"><a href="<?php echo $this->url('service') ?>"><?php echo $this->translate('Services') ?></a></li> -->
+					<!--	<li class="active"><a href="<?php echo $this->url('photo') ?>"><?php echo $this->translate('Photos') ?></a></li> -->
+                    <!--    <li class="active"><a href="<?php echo $this->url('girl') ?>"><?php echo $this->translate('Girls') ?></a></li> -->
+					<!--	<li class="active"><a href="<?php echo $this->url('roster') ?>"><?php echo $this->translate('Roster') ?></a></li> -->
+					<!--	<li class="active"><a href="<?php echo $this->url('section',array('action' => 'employmentinfo')) ?>"><?php echo $this->translate('Employment') ?></a></li> -->
+                    <!--    <li class="active"><a href="<?php echo $this->url('comment') ?>"><?php echo $this->translate('Comment') ?></a></li> -->
+                            <li class="active"><a href="<?php echo $this->url('section',array('action' => 'notice')) ?>"><?php echo $this->translate('Notice') ?></a></li>
+							<li class="active" style="float:right;"><a href="/user/logout"><?php echo $this->translate('Logout') ?></a></li>
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <?php echo $this->content; ?>
+            <hr>
+            <footer>
+                <p style="float:right;padding-right:50px;"><?php echo $this->translate('Customer service: 02 8014 6216.') ?></p>
+            </footer>
+        </div> <!-- /container -->
+        <?php echo $this->inlineScript() ?>
+    </body>
+</html>
+
+
+<?php ENDIF ?>

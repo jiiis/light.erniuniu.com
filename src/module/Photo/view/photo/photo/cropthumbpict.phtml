@@ -1,0 +1,76 @@
+<?php 
+	echo $this->headLink()
+			->prependStylesheet($this->basePath()."/frontend/plugins/jcrop/css/main.css")
+			->prependStylesheet($this->basePath()."/frontend/plugins/jcrop/css/demos.css")
+		//	->prependStylesheet($this->basePath()."/frontend/plugins/jcrop/css/jquery.Jcrop.css");
+?>
+
+<?php
+$title = $girl->name."'s Photo Crop Result: ";
+$this->headTitle($title);
+?>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    $(window).load(function(){
+    $('#crop_photo img2').each(function(){
+        var frame_w = 140;  // frame width
+        var frame_h = 200;  // frame height
+        var img_w = frame_w; //image width initiate as same as frame
+        var img_h = frame_h; //image height initiate as same as frame
+
+        var img_rw=$(this).width(), img_rh=$(this).height();//获取图片真实宽度、高度
+
+        if( img_rw > frame_w || image_rh > frame_h){
+            rate_w = img_rw / frame_w;
+            rate_h = img_rh / frame_h;
+
+            if(rate_w > rate_h){    // 宽缩放超高，按宽比例缩小
+                img_w = frame_w;
+                img_h = img_rh / rate_w; // * frame_w / img_rw;
+            }else{                  // 高缩放超宽，按高比例缩小
+                img_h = frame_h;
+                img_w = img_rw / rate_h; // * frame_h / img_rh;
+            }
+        }        
+        $(this).attr({width:img_w + 'px',height:img_h + 'px'});
+    });
+    });
+});
+</script>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+
+<div class = "container11">
+	<div class = "row">
+		<div class = "span12">
+			<div class = "jc-demo-box">
+				<div class = "page-header" style = "padding-bottom: 15px;">
+					<a style = "" href="<?php echo $this->url('photo', array('action'=>'crop', 'id'=>$photo->id,));?>">
+						Recrop this photo
+					</a>
+					&nbsp;|&nbsp;
+					<a style = "" href="<?php echo $this->url('photo', array('action'=>'girlphoto', 'id'=>$girl->id, 'param0'=>'crop_ok'));?>">
+						Back to <?php echo $girl->name; ?>'s gallery
+					</a>
+				</div>
+			
+				<div style="height:auto;">
+					<div style="float:left;margin-right:20px;">
+						<p style="font-size:20px;">Original Picture:</p>
+						<div id="crop_photo" style="float:left;margin-right=30px; max-height: 600px; height: auto;">
+							<img src="<?php echo $photo->pict_url ?>" id="target" style="max-width=600px; max-height:600px;"/>
+						</div>
+					</div>
+					<div style="padding-left:30px;padding-top:0px;">
+						<p style="font-size:20px;">Cropped Picture:</p>
+						<div id="thumb_photo" style="padding-left: 20px;" >
+							<img style = "max-width: 250px;" src="<?php echo $photo->thumb_url ?>" id="target" />
+						</div>
+					</div>
+				</div>
+				<div style = "clear: both;">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

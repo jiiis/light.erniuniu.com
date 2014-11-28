@@ -1,2 +1,4 @@
 .idea
 .vagrant
+src/public/images
+src/vendor

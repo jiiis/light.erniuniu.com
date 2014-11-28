@@ -1,0 +1,39 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+
+<?php
+// module/Photo/view/photo/photo/edit.phtml:
+
+$title = 'Edit photo';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url(
+    'photo',
+    array(
+        'action' => 'edit',
+        'id'     => $this->id,
+    )
+));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+echo $this->formHidden($form->get('id'));
+echo $this->formRow($form->get('name'));
+echo $this->formRow($form->get('description'));
+echo $this->formRow($form->get('email'));
+echo $this->formRow($form->get('phone'));
+echo $this->formSubmit($form->get('submit'));
+
+echo $this->form()->closeTag();
+<?php ENDIF ?>

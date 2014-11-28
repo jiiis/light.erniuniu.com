@@ -1,0 +1,42 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+
+<?php
+$title = '$this->girl_name photos';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<p>
+    <a href="<?php echo $this->url('photo', array('action'=>'add'));?>">Add new photo</a>
+</p>
+
+<table class="table">
+<tr>
+    <th>id</th>
+    <th>first pict</th>
+    <th>name</th>
+    <th>phone</th>
+    <th>&nbsp;</th>
+</tr>
+<?php foreach ($photos as $photo) : ?>
+<tr>
+    <td><?php echo $this->escapeHtml($photo->id);?></td>
+    <td><?php echo $this->escapeHtml($photo->name);?></td>
+    <td><?php echo $this->escapeHtml($photo->phone);?></td>
+    <td>
+        <a href="<?php echo $this->url('photo',
+            array('action'=>'edit', 'id' => $photo->id));?>">Edit</a>
+        <a href="<?php echo $this->url('photo',
+            array('action'=>'delete', 'id' => $photo->id));?>">Delete</a>
+    </td>
+</tr>
+<?php endforeach; ?>
+</table>
+
+<?php ENDIF ?>

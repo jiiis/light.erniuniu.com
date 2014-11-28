@@ -1,0 +1,38 @@
+<?php IF(!$this->zfcUserIdentity()): ?>
+    <!-- display the login form -->
+    <?php echo $this->zfcUserLoginWidget(array('redirect'=>'application')); ?>
+<?php ELSE: ?>
+    <!-- display the 'display name' of the user -->
+    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+
+
+
+<?php
+// module/Photo/view/photo/photo/deletebygirl.phtml:
+
+$title = "Delete $girl->name photo ";
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<p>Are you sure that you want to delete
+    '<?php echo $this->escapeHtml($girl->name); ?>' photo id = 
+    '<?php echo $this->escapeHtml($photo->id); ?>'?
+</p>
+<?php
+$url = $this->url('photo', array(
+    'action' => 'deletebygirl',
+    'id'     => $photo->id,
+    'param0'=> $girl->id,
+));
+?>
+
+<form action="<?php echo $url ?>" method="post">
+<div>
+    <input type="hidden" name="id" value="<?php echo (int) $photo->id; ?>" />
+    <input type="hidden" name="girl_id" value="<?php echo (int) $girl->id; ?>" />
+    <input type="submit" name="del" value="Yes" />
+    <input type="submit" name="del" value="No" />
+</div>
+</form>
+<?php ENDIF ?>

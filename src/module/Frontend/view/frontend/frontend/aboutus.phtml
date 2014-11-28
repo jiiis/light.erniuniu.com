@@ -1,0 +1,541 @@
+<?php
+	$shop_info = null;
+	foreach($basic_info as $single_info){
+		$shop_info = $single_info;
+	}
+	$shop_name = $shop_info->name;
+	$shop_address = $shop_info->address;
+	$shop_phone = $shop_info->phone;
+	$shop_email = $shop_info->email;
+?>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--[if IE]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		
+		<!--meta-->
+		<title>Paddington 244 - About Us - Sydney | Massage | Brothel | Escort | Adult Service | Best Sex | Top Hot Girls in Paddington Sydney</title>
+		<meta charset="utf-8">
+		<meta name = "keywords" content = "Sydney, Paddington, Massage, Brothel, Escort, Adult Service, ML, Best Sex, Spa, Top Hot Asian Girls, Blow Job, Hand Job, Pantyhose, Tights, Fetish, 悉尼, 色情, 成人, 减压, 性爱, 性交, 口交, 肛交, 足交, 恋丝, 恋足, 推油, 丝袜, 黑丝, 肉丝, 丝足, 制服, 女仆, 护士, 空姐, 巨乳, 美女, 亚洲, 打飞机, 出钟, 按摩, 妓院, 鸡店, 桑拿, 性服务, 会所, 夜总会">
+		<meta name = "description" content = "Sydney, Paddington, Massage, Brothel, Escort, Adult Service, ML, Best Sex, Spa, Top Hot Asian Girls, Blow Job, Hand Job, Pantyhose, Tights, Fetish, 悉尼, 色情, 成人, 减压, 性爱, 性交, 口交, 肛交, 足交, 恋丝, 恋足, 推油, 丝袜, 黑丝, 肉丝, 丝足, 制服, 女仆, 护士, 空姐, 巨乳, 美女, 亚洲, 打飞机, 出钟, 按摩, 妓院, 鸡店, 桑拿, 性服务, 会所, 夜总会">
+		<link rel="shortcut icon" href="/images/favicon.ico">
+		<link rel = "stylesheet" type = "text/css" href = "/frontend/css/main_front.css">
+		
+		<!--jquery-->
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		
+		<!--jquery ui-->
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+		<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+		
+		<!--jscrollpane-->
+		<link rel = "stylesheet" href="/frontend/plugins/jscrollpane/css/jscrollpane.css" />
+		<script src = "/frontend/plugins/jscrollpane/js/jscrollpane.js"></script>
+		<script src = "/frontend/plugins/jscrollpane/js/mousewheel.js"></script>
+		
+		<!--zAccordion-->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+		<script src="/frontend/plugins/zAccordion/js/jquery.zaccordion.min.js"></script>
+		
+		<!-- RoundAbout -->
+		<script src="/frontend/plugins/RoundAbout/jquery.roundabout.min.js"></script>
+		<script src="/frontend/plugins/RoundAbout/jquery.roundabout-shapes.min.js"></script>
+		<script src="/frontend/plugins/RoundAbout/jquery.event.drag-2.2.js"></script>
+		<script src="/frontend/plugins/RoundAbout/jquery.event.drop-2.2.js"></script>
+		
+		<!-- Sticky Kit -->
+		<script src = "/frontend/plugins/Sticky-Kit/Sticky-Kit.js"></script>
+		
+		<!-------------------------------------------------------------------------------------------->
+	
+		<script>
+			jQuery(document).ready(function($){
+				// sticky menu
+				$("div#navi_bar").stick_in_parent()
+				.on("sticky_kit:stick", function(e){
+					$(this).css('margin-top', '0px'); // 根据需求修改
+				})
+				.on("sticky_kit:unstick", function(e){
+					$(this).css('margin-top', '0px');
+				});
+				
+				// top girl move
+				window.setTimeout(function(){
+					$("div.div_top_girl").show("bounce", 500, function(){
+						$(this).animate({
+							"right": "885px",
+						}, 1000, function(){
+							$(this).hide().show("pulsate", 1000, function(){
+								$("div.div_top_title").show("clip", 1000, function(){
+									$("div.div_desire_phone").show("drop", 1500);
+								});
+							});
+						});
+					});
+				}, 1000);
+				
+				// 鼠标放在一个navi item上面
+				$("div.navi_item:not(.navi_highlighted)").hover(function(){
+					$(this).addClass("navi_highlighted");
+				}, function(){
+					$(this).removeClass("navi_highlighted");
+				});
+				
+				// jascrollpane
+				$("div.new_home_text div.txt").jScrollPane();
+			});
+		</script>
+		
+		<!-- zAccordion -->
+		<style type="text/css">
+			#ul_top_girls li {position:relative;}
+			#ul_top_girls div.slider-bg {background:#000;top:300px;height:102px;width:297px;left:0;position:absolute;z-index:10;opacity:.5;}
+			#ul_top_girls div.slider-info {top:300px;height:72px;left:0;position:absolute;width:65px;z-index:15;padding:15px;}
+			#ul_top_girls div.slider-info strong {font-size:18px;color:#fff;margin-bottom:5px;}
+			#ul_top_girls div.slider-info p {display:none;font-size:12px;line-height:14px;color:#fff;margin:0 !important;}
+			#ul_top_girls li.slider-open div.slider-info {width:267px;}
+			#ul_top_girls li.slider-open div.slider-info strong {font-size:22px;}
+			#ul_top_girls li.slider-open div.slider-info p {display:block;}
+			
+		/*	#ul_top_girls img{
+				-moz-box-shadow: 0px 0px 12px #000;
+				-webkit-box-shadow: 0px 0px 12px #000;
+				box-shadow: 0px 0px 12px #000;
+				border: 2px solid #fff;
+				border-width: 0px 1px;
+			}*/
+			
+			#ul_top_girls li{
+				-moz-box-shadow: 0px 0px 12px #000;
+				-webkit-box-shadow: 0px 0px 12px #000;
+				box-shadow: 0px 0px 12px #000;
+			}
+		</style>
+		<script>
+			$(function(){
+				$("#ul_top_girls").zAccordion({
+					timeout: 3000,
+					easing: "easeOutBounce",
+					width: 387,
+					speed: 1000,
+					slideClass: "slider",
+					slideWidth: 297,
+					height: 420,
+					trigger: "mouseover"
+				});
+			});
+		</script>
+		
+		<!-- RoundAbout -->
+		<style>
+			.ul_roundabout li {position:relative;}
+			.ul_roundabout div.slider-bg {background:#000;top:70%;width:100%; height: 25%;left:0;position:absolute;z-index:10;opacity:.5;}
+			.ul_roundabout div.slider-info {top:70%;height:72px;left:0;position:absolute;width: calc(100% - 30px); width: -webkit-calc(100% - 30px);;z-index:15;padding:15px;}
+			.ul_roundabout div.slider-info strong {font-size:25px;color:#fff;}
+			.ul_roundabout div.slider-info p {margin: 5px 0px 0px !important;display: none; font-size:12px;line-height:14px;color:#fff;}
+			.ul_roundabout li:first-of-type div.slider-info strong {font-size: 18px;}
+			.ul_roundabout li:first-of-type div.slider-info p {display: block;}
+		
+			.ul_roundabout{
+				list-style: none;
+				margin: 0px;
+				padding: 0px;
+				width: 485px; /* 如果跟new_new_home_right一样为490px，实际的ul宽度会超出490px */
+				height: 415px; /* 如果跟new_new_home_right一样为420px，实际的ul位置会往下移 */
+			}
+			
+			.ul_roundabout .roundabout-moveable-item{
+				width: 287px;
+				height: 410px;
+				cursor: pointer;
+			/*	background-color: #ccc;*/
+				border: 5px solid #b22222;
+				
+				-webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+				-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+				box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+			}
+			
+			.ul_roundabout .roundabout-moveable-item img{
+				width: 100%;
+				height: 100%;
+			}
+			
+			.ul_roundabout .roundabout-in-focus{
+				cursor: auto;
+			}
+		</style>
+		
+		<script>
+			$(document).ready(function(){
+				$('ul.ul_roundabout li').bind({
+					"reposition": function(){
+						var degrees = $(this).data('roundabout').degrees,
+						roundaboutBearing = $(this).parent().data('roundabout').bearing,
+						rotateY = Math.round(roundaboutBearing - degrees);
+
+						$(this).css({
+							"-webkit-transform": "perspective(2000) rotateY(" + rotateY + "deg)",
+							"-moz-transform": "perspective(2000) rotateY(" + rotateY + "deg)",
+							"transform": "perspective(2000) rotateY(" + rotateY + "deg)"
+						});
+					}
+				});
+
+				$('ul.ul_roundabout').roundabout({
+					enableDrag: true,
+					autoplay: true,
+					autoplayDuration: 3000,
+					autoplayPauseOnHover: true,
+				//	bearing: 90.0,
+				//	tilt: -5,
+					minOpacity: 0.9,
+				//	maxOpacity: 1.0,
+					minScale: 0.75,
+				//	maxScale: 1.0,
+					duration: 1500,
+				//	focusBearing: 10,
+				//	shape: 'figure8',
+				//	reflect: true,
+					easing: 'easeOutElastic',
+				});
+				
+				$('ul.ul_roundabout li').bind({
+					"focus": function(){
+						$(this).find("strong").animate({
+							"font-size": "18px"
+						}, 500);
+						$(this).find("p").fadeIn(500);
+					},
+					"blur": function(){
+						$(this).find("strong").css("font-size", "25px");
+						$(this).find("p").fadeOut(500);
+					}
+				});
+			});
+		</script>
+		
+		<!-- addthis -->
+		<style>
+			div.addthis_toolbox{
+				display: none;
+				right: 10px;
+				top: 20px;
+			}
+		</style>
+		
+		<script>
+			jQuery(document).ready(function($){
+				window.setTimeout(function(){
+					$("div.addthis_toolbox").fadeIn(1000);
+				}, 2000);
+			});
+		</script>
+		
+		<!------------------------------- notice ---------------------------->
+		
+		<!-- scroll -->
+		<script type="text/javascript">
+			var scroll_init = false;
+		
+			var delayb4scroll=1000 //Specify initial delay before marquee starts to scroll on page (2000=2 seconds)
+			var marqueespeed=1 //Specify marquee scroll speed (larger is faster 1-10)
+			var pauseit=1 //Pause marquee onMousever (0=no. 1=yes)?
+
+			////NO NEED TO EDIT BELOW THIS LINE////////////
+
+			var copyspeed=marqueespeed
+			var pausespeed=(pauseit==0)? copyspeed: 0
+			var actualheight=''
+
+			function scrollmarquee(){
+			if (parseInt(cross_marquee.style.top)>(actualheight*(-1)+8))
+			cross_marquee.style.top=parseInt(cross_marquee.style.top)-copyspeed+"px"
+			else
+			cross_marquee.style.top=parseInt(marqueeheight)+8+"px"
+			}
+
+			function initializemarquee(){
+			cross_marquee=document.getElementById("vmarquee")
+			cross_marquee.style.top=0
+			marqueeheight=document.getElementById("marqueecontainer").offsetHeight
+			actualheight=cross_marquee.offsetHeight
+			if (window.opera || navigator.userAgent.indexOf("Netscape/7")!=-1){ //if Opera or Netscape 7x, add scrollbars to scroll and exit
+			cross_marquee.style.height=marqueeheight+"px"
+			cross_marquee.style.overflow="scroll"
+			return
+			}
+			setTimeout('lefttime=setInterval("scrollmarquee()",30)', delayb4scroll)
+			}
+			
+			/*
+			if (window.addEventListener)
+			window.addEventListener("load", initializemarquee, false)
+			else if (window.attachEvent)
+			window.attachEvent("onload", initializemarquee)
+			else if (document.getElementById)
+			window.onload=initializemarquee
+			*/
+		</script>
+
+		<!-- floating -->
+		<script>
+			$(function(){
+				$("div.notice_close").click(function(){
+					$("div#div_notice").hide("clip", 500);
+				});
+			
+				//config
+				$float_speed=1500; //milliseconds
+				$float_easing="easeOutQuint";
+				$notice_content_fade_speed=500; //milliseconds
+				$closed_notice_content_opacity=0.8;
+
+				//cache vars
+				$div_notice=$("#div_notice");
+				$div_notice_notice_content=$("#div_notice .notice_content");
+				$div_notice_notice_lable=$("#div_notice .notice_lable");
+
+				$(window).load(function() {
+					notice_contentPosition=$('#div_notice').position().top;
+					Floatnotice_content();
+					$div_notice.hover(
+						function(){ //mouse over
+							$div_notice_notice_lable.fadeTo($notice_content_fade_speed, 1);
+						//	$div_notice_notice_content.fadeIn($notice_content_fade_speed);
+							$div_notice_notice_content.show("blind", $notice_content_fade_speed);
+							
+							if(!scroll_init){
+								scroll_init = true;
+								initializemarquee();
+							}
+							
+							$("div.notice_expand").hide();
+							$("div.notice_close").show();
+						},
+						function(){ //mouse out
+							$div_notice_notice_lable.fadeTo($notice_content_fade_speed, $closed_notice_content_opacity);
+						//	$div_notice_notice_content.fadeOut($notice_content_fade_speed);
+							$div_notice_notice_content.hide("blind", $notice_content_fade_speed);
+							
+							$("div.notice_close").hide();
+							$("div.notice_expand").show();
+						}
+					);
+				});
+
+				$(window).scroll(function () { 
+					Floatnotice_content();
+				});
+
+				function Floatnotice_content(){
+					var scrollAmount=$(document).scrollTop();
+					var newPosition=notice_contentPosition+scrollAmount;
+					if($(window).height()<$div_notice.height()+$div_notice_notice_content.height()){
+						$div_notice.css("top",notice_contentPosition);
+					} else {
+						$div_notice.stop().animate({top: newPosition}, $float_speed, $float_easing);
+					}
+				}
+			});
+		</script>
+		
+		<!------------------------------- end of notice ---------------------------->
+	</head>
+	
+	<body>
+		<h1 style = "display: none;">Sydney, Paddington, Massage, Brothel, Escort, Adult Service, ML, Best Sex, Spa, Top Hot Asian Girls, Blow Job, Hand Job, Pantyhose, Tights, Fetish, 悉尼, 色情, 成人, 减压, 性爱, 性交, 口交, 肛交, 足交, 恋丝, 恋足, 推油, 丝袜, 黑丝, 肉丝, 丝足, 制服, 女仆, 护士, 空姐, 巨乳, 美女, 亚洲, 打飞机, 出钟, 按摩, 妓院, 鸡店, 桑拿, 性服务, 会所, 夜总会</h1>
+		<h2 style = "display: none;">Sydney, Paddington, Massage, Brothel, Escort, Adult Service, ML, Best Sex, Spa, Top Hot Asian Girls, Blow Job, Hand Job, Pantyhose, Tights, Fetish, 悉尼, 色情, 成人, 减压, 性爱, 性交, 口交, 肛交, 足交, 恋丝, 恋足, 推油, 丝袜, 黑丝, 肉丝, 丝足, 制服, 女仆, 护士, 空姐, 巨乳, 美女, 亚洲, 打飞机, 出钟, 按摩, 妓院, 鸡店, 桑拿, 性服务, 会所, 夜总会</h2>
+		
+		<!-- Notice -->
+		<div id="div_notice">
+			<div class = "notice_close">
+				<img src = "/frontend/images/notice_close.png" />
+			</div>
+			<div class = "notice_expand">
+				<img src = "/frontend/images/notice_expand.png" />
+			</div>
+			<div class="notice_lable">Notice</div>
+			<div class="notice_content">
+				<div id = "marqueecontainer" onMouseover = "copyspeed=pausespeed" onMouseout = "copyspeed=marqueespeed">
+					<div id = "vmarquee">
+						<?php echo stripslashes($notice_text->content); ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- AddThis Button BEGIN -->
+		<div class="addthis_toolbox addthis_floating_style addthis_32x32_style" style = "z-index: 10000;">
+			<a class="addthis_button_facebook"></a>
+			<a class="addthis_button_twitter"></a>
+			<a class="addthis_button_pinterest_share"></a>
+			<a class="addthis_button_google_plusone_share"></a>
+		</div>
+		<script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51db41ce52c5a749"></script>
+		<!-- AddThis Button END -->
+		
+		<div id = "background">
+			<div class = "top_info">
+				<div class = "div_top_title font-effect-3d-float">
+					<a href = "/sex/aboutus">
+						&nbsp;Paddington 244&nbsp;
+					</a>
+				</div>
+				<div class = "div_top_girl">
+					<img src = "/frontend/images/girl_top.png" />
+				</div>
+				<div class = "div_desire_phone">
+					<?php echo $shop_phone; ?>
+					<br />
+					<?php echo $shop_address; ?>&nbsp;
+				</div>
+			</div>
+			
+			<div id = "navi_bar">
+				<div id = "navi_bar_detail">
+					<a href = "<?php echo $this->url('frontend', array('action'=>'aboutus')); ?>">
+						<div class = "navi_item navi_highlighted"><div>About Us</div></div>
+					</a>
+					<a href = "<?php echo $this->url('frontend', array('action'=>'gallery')); ?>">
+						<div class = "navi_item"><div>Ladies</div></div>
+					</a>
+					<a href = "<?php echo $this->url('frontend', array('action'=>'timetable')); ?>">
+						<div class = "navi_item"><div>Timetable</div></div>
+					</a>
+					<a href = "<?php echo $this->url('frontend', array('action'=>'prices')); ?>">
+						<div class = "navi_item"><div>Services</div></div>
+					</a>
+					<a href = "<?php echo $this->url('frontend', array('action'=>'contactus')); ?>">
+						<div class = "navi_item"><div>Contact Us</div></div>
+					</a>
+				</div>
+			</div>
+			
+			<!--RotatingImageSlider-->
+			<link rel = "stylesheet" type = "text/css" href = "/frontend/plugins/RotatingImageSlider/css/style.css" />
+			<link href = 'http://fonts.googleapis.com/css?family=PT+Sans+Narrow' rel = 'stylesheet' type = 'text/css' />
+	<!--	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>-->
+			<script type = "text/javascript" src = "/frontend/plugins/RotatingImageSlider/js/jquery.transform-0.9.3.min_.js"></script>
+			<script type = "text/javascript" src = "/frontend/plugins/RotatingImageSlider/js/jquery.mousewheel.js"></script>
+			<script type = "text/javascript" src = "/frontend/plugins/RotatingImageSlider/js/jquery.RotateImageMenu.js"></script>
+			<div id = "rotating_slider">
+				<div class="rm_wrapper">
+					<div id="rm_container" class="rm_container">
+						<ul>
+							<li data-images="rm_container_1" data-rotation="-10"><img src="/frontend/images/rotating/1/1.jpg"/></li>
+							<li data-images="rm_container_2" data-rotation="-5"><img src="/frontend/images/rotating/1/2.jpg"/></li>
+							<li data-images="rm_container_3" data-rotation="2"><img src="/frontend/images/rotating/1/3.jpg"/></li>
+							<li data-images="rm_container_4" data-rotation="9"><img src="/frontend/images/rotating/1/4.jpg"/></li>
+						</ul>
+						<div id="rm_mask_left" class="rm_mask_left"></div>
+						<div id="rm_mask_right" class="rm_mask_right"></div>
+						<div id="rm_corner_left" class="rm_corner_left"></div>
+						<div id="rm_corner_right" class="rm_corner_right"></div>
+						<!--
+						<h2>Fashion Explosion 2012</h2>
+						-->
+						<div style="display:none;">
+							<div id="rm_container_1">
+								<img src="/frontend/images/rotating/1/1.jpg"/>
+								<img src="/frontend/images/rotating/2/1.jpg"/>
+								<img src="/frontend/images/rotating/3/1.jpg"/>
+								<img src="/frontend/images/rotating/4/1.jpg"/>
+								<img src="/frontend/images/rotating/5/1.jpg"/>
+								<img src="/frontend/images/rotating/6/1.jpg"/>
+							</div>
+							<div id="rm_container_2">
+								<img src="/frontend/images/rotating/1/2.jpg"/>
+								<img src="/frontend/images/rotating/2/2.jpg"/>
+								<img src="/frontend/images/rotating/3/2.jpg"/>
+								<img src="/frontend/images/rotating/4/2.jpg"/>
+								<img src="/frontend/images/rotating/5/2.jpg"/>
+								<img src="/frontend/images/rotating/6/2.jpg"/>
+							</div>
+							<div id="rm_container_3">
+								<img src="/frontend/images/rotating/1/3.jpg"/>
+								<img src="/frontend/images/rotating/2/3.jpg"/>
+								<img src="/frontend/images/rotating/3/3.jpg"/>
+								<img src="/frontend/images/rotating/4/3.jpg"/>
+								<img src="/frontend/images/rotating/5/3.jpg"/>
+								<img src="/frontend/images/rotating/6/3.jpg"/>
+							</div>
+							<div id="rm_container_4">
+								<img src="/frontend/images/rotating/1/4.jpg"/>
+								<img src="/frontend/images/rotating/2/4.jpg"/>
+								<img src="/frontend/images/rotating/3/4.jpg"/>
+								<img src="/frontend/images/rotating/4/4.jpg"/>
+								<img src="/frontend/images/rotating/5/4.jpg"/>
+								<img src="/frontend/images/rotating/6/4.jpg"/>
+							</div>
+						</div>
+					</div>
+					<div class="rm_nav">
+						<a id="rm_next" href="#" class="rm_next"></a>
+						<a id="rm_prev" href="#" class="rm_prev"></a>
+					</div>
+					<div class="rm_controls">
+						<a id="rm_pause" href="#" class="rm_pause">Pause</a>
+						<a id="rm_play" href="#" class="rm_play">Play</a>
+					</div>
+				</div>
+			</div>
+			
+			<div id = "container">
+				<div class = "background_opacity">
+					<div class = "new_home_right">
+						<div id = "new_contact_info">
+							<div class = "new_info">
+								<div class = "new_info_key">Phn.</div>
+								<div class = "new_info_value new_info_value_home"><?php echo $shop_phone; ?></div>
+							</div>
+							<div class = "new_info">
+								<div class = "new_info_key">Eml.</div>
+								<div class = "new_info_value new_info_value_home"><?php echo $shop_email; ?></div>
+							</div>
+							<div class = "new_info">
+								<div class = "new_info_key">Add.</div>
+								<div class = "new_info_value new_info_value_home"><?php echo $shop_address; ?></div>
+							</div>
+						</div>
+						
+						<div class = "divider_h">
+						</div>
+						
+						<div class = "new_home_text">
+							<div class = "txt" id = "text_home_info">
+								<?php echo stripslashes($home_info->content); ?>
+							</div>
+						</div>
+					</div>
+					
+					<div class = "divider_v_20">
+					</div>
+					
+					<div class = "new_new_home_right">
+						<ul class = "ul_roundabout">
+							<?php foreach($girls as $girl): ?>
+								<li>
+									<img src="<?php echo $girl->thumb_url; ?>" />
+									<div class="slider-bg"></div>
+									<div class="slider-info">
+										<strong><?php echo $girl->name; ?></strong>
+										<p class="slider-text"><?php echo $girl->description; ?></p>
+									</div>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "footer_own">
+				Copyright &copy; 2009-2013 Paddington 244, All Rights Reserved.
+			</div>
+		</div>
+	</body>
+</html>

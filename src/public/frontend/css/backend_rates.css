@@ -1,0 +1,406 @@
+.placeholder_cat{
+	display: inline-block;
+	margin-left: 20px;
+	margin-top: 40px;
+	width: 263px;
+	height: 134px;
+	background: #fff;
+	border: 2px dotted #aaaaaa;
+}
+
+ul{
+	list-style-type: none;
+	padding: 0px;
+	font-family: arial;
+}
+
+li{
+	color: #000;
+	text-align: center;
+}
+
+div.rate_head{
+	width: 100%;
+	height: 200px;
+	min-width: 974px;
+	
+	-moz-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	
+	-webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+	-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+	box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+}
+
+div.rate_head div.rate_head_1{
+	float: left;
+	width: 307px;
+	height: 200px;
+/*	min-width: 300px;*/
+}
+
+div.rate_head div.rate_head_2{
+	float: left;
+	margin: 15px 0px;
+	width: 285px;
+	height: 170px;
+/*	min-width: 400px;*/
+	border-left: 1px dotted #aaa;
+	border-right: 1px dotted #aaa;
+}
+
+div.rate_head div.rate_head_3{
+	float: left;
+	width: calc(100% - 594px);
+	width: -webkit-calc(100% - 594px);
+	width: -moz-calc(100% - 594px);
+	height: 200px;
+	min-width: 380px;
+}
+
+div.div_ul_cat{
+	margin-top: 30px;
+}
+
+ul.ul_cat_list{
+	margin: 0px;
+	padding: 0px 0px 20px;
+	clear: both;
+	min-height: 197px;
+}
+
+li.li_cat_list{
+	/* float: left will align on the top */
+	/* inline-block will align on the bottom */
+/*	float: left;*/
+	display: inline-block;
+	vertical-align: top;
+}
+
+ul.ul_cat_list_sample{
+	margin: 1px 20px 22px 0px;
+}
+
+ul.ul_cat_list_sample li.li_cat_list{
+	cursor: move;
+}
+
+ul.ul_rate_list_sample{
+/*	margin: 2px 20px 3px;*/
+	margin: 0px 20px 1px;
+	padding: 0px;
+}
+
+ul.ul_rate_list, ul.ul_rate_list_temp{
+	overflow: hidden;
+	float: left;
+	margin: 40px 0px 0px 20px;
+	padding: 20px 0px 10px 0px;
+	max-width: 265px;
+	min-width: 265px;
+	min-height: 35px;
+	border: 1px solid #cbb174;
+	line-height: 25px;
+	
+	-moz-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	
+	-webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+	-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+	box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+}
+
+ul.ul_rate_list li, ul.ul_rate_list_temp li, ul.ul_rate_list_sample li{
+	/* If we use float, the sortable won't work properly!! */
+/*	float: left;
+	clear: both;*/
+	margin: 10px 10px 0px 10px;
+	padding-right: 26px; /* 5 + 21 */
+	max-width: 245px;
+	min-width: 245px;
+	cursor: move;
+	
+	height: 25px; /* !!!!!!!!!!!!!!!! */
+	line-height: 25px; /* !!!!!!!!!!!!!!!! */
+	font-size: 16px;
+}
+
+ul.ul_rate_list_sample li{
+	width: 245px;
+	margin: 11px 0px 0px 0px;
+}
+
+ul.ul_rate_list_sample li:first-of-type{
+	margin-top: 0px;
+}
+
+ul.ul_rate_list li div.div_rate_info, ul.ul_rate_list_temp li div.div_rate_info, ul.ul_rate_list_sample li div.div_rate_info{
+/*	float: left;*/
+	display: inline-block;
+	width: 120px;
+	height: 25px;
+	line-height: 25px;
+	background-color: #b22222;
+	color: #fff;
+	font-size: 16px;
+	vertical-align: middle;
+	
+	-webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+	-moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+ul.ul_rate_list li div.div_rate_info span, ul.ul_rate_list_temp li div.div_rate_info span, ul.ul_rate_list_sample li div.div_rate_info span{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+ul.ul_rate_list li div.div_rate_info:first-of-type, ul.ul_rate_list_temp li div.div_rate_info:first-of-type, ul.ul_rate_list_sample li div.div_rate_info:first-of-type{
+	margin-right: 5px;
+}
+
+ul.ul_rate_list_temp li div.div_rate_info, ul.ul_rate_list_sample li div.div_rate_info{
+	background-color: transparent;
+	color: #666;
+}
+
+/* for connectToSortable to work if li_cat_list is left floated */
+ul.ul_cat_list:after{
+	clear: both;
+	content: '.';
+	display: block;
+	height: 0;
+	line-height: 0;
+	font-size: 0;
+	visibility: hidden;
+	padding: 0;
+	margin: 0;
+}
+
+div.div_cat_name{
+	position: absolute;
+	margin: 19px 0px 0px 31px;
+	width: 150px;
+	height: 40px;
+	line-height: 40px;
+	background: #fff;
+	border: 1px solid #cbb174;
+	color: #666;
+	font-size: 17px;
+	cursor: move;
+	
+	-moz-border-radius: 2px;
+	-khtml-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	
+	-webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+	-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+	box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+}
+
+div.div_cat_name span{
+/*	vertical-align: middle;*/
+}
+
+div.trash{
+	margin: 15px 20px;
+	width: calc(100% - 42px);
+	width: -webkit-calc(100% - 42px);
+	width: -moz-calc(100% - 42px);
+	height: 168px;
+	border: 1px solid #aaa;
+}
+
+div.trash div.trash_title{
+	width: 100%;
+	height: 25px;
+	line-height: 25px;
+	text-align: center;
+	color: #666;
+	font-family: arial;
+}
+
+/*
+div.trash_title_text{
+	display: inline-block;
+	margin: 0px auto;
+	height: 25px;
+	line-height: 25px;
+}*/
+
+div.trash div.trash_content{
+	margin: 0px 20px;
+	padding: 10px 0px;
+	width: calc(100% - 40px);
+	width: -webkit-calc(100% - 40px);
+	width: -moz-calc(100% - 40px);
+	height: 122px;
+	border-top: 1px solid #aaa;
+}
+
+div.trash_content ul.ul_trash_list{
+	position: relative;
+	margin: 0px;
+	width: 100%;
+	height: 122px;
+}
+
+ul.container_active{
+	background-color: #ddd;
+	
+	-moz-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	
+	-moz-box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.4) inset;
+	-webkit-box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.4) inset;
+	box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.4) inset;
+}
+
+ul.container_hover{
+	background-color: #aaa;
+}
+
+div.trash_icon_cat, div.recycle_icon{
+	position: absolute;
+	margin: 20px 0px 0px 235px;
+	display: none;
+}
+
+div.recycle_icon{
+	margin: 20px 0px 0px 230px;
+}
+
+div.trash_icon_cat img, div.recycle_icon img{
+	z-index: 100;
+	height: 40px;
+	cursor: move;
+}
+
+div.div_cat_name input{
+	display: none;
+	margin-top: 8px;
+	padding: 0px 5px;
+	width: 110px;
+/*	height: 23px;*/
+	height: 22px;
+/*	line-height: 23px;*/
+	line-height: 22px;
+	vertical-align: middle;
+	border: 1px solid #aaa;
+	color: #666;
+	font-size: 17px;
+	font-family: arial;
+	text-align: center;
+	
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+}
+
+ul.ul_rate_list input, ul.ul_rate_list_temp input, ul.ul_rate_list_sample input{
+	display: none;
+	margin-top: 4px;
+	padding: 0px 3px;
+	vertical-align: middle;
+	width: 90px;
+	height: 15px;
+	line-height: 15px;
+	font-size: 15px;
+	border: 1px solid #aaa;
+	color: #666;
+	font-family: arial;
+	text-align: center;
+	
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+}
+
+input:focus{
+	border-color: #aaa !important;
+	outline: -webkit-focus-ring-color auto 5px !important;
+	outline-offset: -2px;
+	
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+}
+
+div.trash_icon_rate{
+	display: none;
+	position: absolute;
+/*	margin: -25px 0px 0px 250px;*/
+	height: 25px;
+	line-height: 25px;
+	font-size: 0px;
+}
+
+div.trash_icon_rate img{
+	height: 25px;
+}
+
+/************************************************************/
+
+/*
+ul.ul_trash_list li.li_cat_list ul.ul_rate_list{
+	margin-top: 20px;
+	margin-left: 10px;
+	padding-top: 10px;
+	padding-bottom: 5px;
+	max-width: 132px;
+	min-width: 132px;
+	min-height: 17px;
+}
+
+ul.ul_trash_list li.li_cat_list ul.ul_rate_list li{
+	margin-top: 5px;
+	margin-right: 5px;
+	margin-left: 5px;
+	font-size: 0px;
+	height: 12px;
+	line-height: 12px;
+	min-width: 122px;
+	max-width: 122px;
+}
+
+ul.ul_trash_list li.li_cat_list ul.ul_rate_list li div.div_rate_info{
+	width: 60px;
+	height: 12px;
+	line-height: 12px;
+	font-size: 8px;
+	background-color: transparent;
+	color: #666;
+}
+
+ul.ul_trash_list li.li_cat_list ul.ul_rate_list li div.div_rate_info:first-of-type{
+	margin-right: 2px;
+}
+
+ul.ul_trash_list li.li_cat_list div.div_cat_name{
+	margin-top: 9px;
+	margin-left: 16px;
+	width: 75px;
+	height: 20px;
+	line-height: 20px;
+	font-size: 9px;
+}
+
+ul.ul_trash_list li.li_cat_list div.recycle_icon{
+	margin-top: 10px;
+	margin-left: 115px;
+}
+
+ul.ul_trash_list li.li_cat_list div.recycle_icon img{
+	height: 20px;
+}
+*/
+
+ul.ul_trash_list li.li_cat_list{
+	display: none;
+}

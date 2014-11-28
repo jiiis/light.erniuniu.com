@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="/resources/demos/style.css" />
+<script>
+	$(function(){
+		$(document).tooltip({
+			track: true,
+			show:{
+				effect: "size",
+				delay: 100,
+			},
+			hide:{
+				effect: "clip",
+				delay: 0,
+			},
+		});
+	})
+</script>
+
+<?php
+// module/BasicInfo/view/basicInfo/basicInfo/index.phtml:
+
+$title = 'Notice Maintenance';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div style="border-top:3px solid black;padding-bottom:20px;"></div>
+<!--
+<h4>Welcome</h4>
+-->
+<div>
+    <p><?php echo stripslashes($notice_text->content); ?></p>
+    <a href="<?php echo $this->url('section',
+        array('action'=>'editnotice', 'id' =>'7'));?>" title = "Click to edit the notice section.">
+		<input type = "button" value = "Edit" />
+	</a>
+</div>
