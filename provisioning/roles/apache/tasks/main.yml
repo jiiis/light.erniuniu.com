@@ -1,24 +1,27 @@
 ---
 
-- name: install apache
+- name: install apache2
   apt: pkg={{ item }} state=latest update_cache=yes cache_valid_time=60
   with_items:
     - apache2
     - libapache2-mod-php5
 
-- name: apache, enable required modules
+- name: enable required modules
   command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
 
-- name: apache, enable required modules
+- name: enable required modules
   command: a2enmod proxy creates=/etc/apache2/mods-enabled/proxy.load
 
-- name: apache, enable required modules
+- name: enable required modules
   command: a2enmod proxy_http creates=/etc/apache2/mods-enabled/proxy_http.load
 
-- name: apache, disable default website
+- name: disable default site
   command: a2dissite 000-default
 
-- name: apache, envvars
+- name: delete default site
+  file: path=/var/www/html state=absent
+
+- name: configure envvars
   file: src=envvars dest=/etc/apache2/envvars force=yes
   notify: apache2-restart
 
