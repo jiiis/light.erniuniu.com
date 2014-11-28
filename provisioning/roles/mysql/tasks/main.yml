@@ -9,7 +9,7 @@
 
 - name: disable bind-address configuration
   lineinfile: dest=/etc/mysql/my.cnf regexp="^bind-address" line="#bind-address = 127.0.0.1" state=present backrefs=yes backup=yes
-  notify: mysql_restart
+  notify: restart mysql
 
 - name: configure root user
   mysql_user: name=root

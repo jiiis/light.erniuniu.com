@@ -23,6 +23,6 @@
 
 - name: configure envvars
   file: src=envvars dest=/etc/apache2/envvars force=yes
-  notify: apache2-restart
+  notify: restart apache2
 
 - include: vhost.yml vhost="{{ host }}" template="vhost.conf"

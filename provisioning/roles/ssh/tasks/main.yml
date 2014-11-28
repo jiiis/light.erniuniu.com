@@ -4,7 +4,7 @@
   copy: src=../.ssh/id_rsa dest=/home/vagrant/.ssh/id_rsa owner=vagrant group=vagrant mode=0400
 
 - name: copy public key
-  copy: src=../.ssh/id_rsa.pub dest=/home/vagrant/.ssh/id_rsa.pub owner=vagrant group=vagrant
+  copy: src=../.ssh/id_rsa.pub dest=/home/vagrant/.ssh/id_rsa.pub owner=vagrant group=vagrant mode=0644
 
 - name: copy configuration file
   copy: src=../.ssh/config dest=/home/vagrant/.ssh/config owner=vagrant group=vagrant mode=0600
