@@ -12,6 +12,9 @@
 - name: import create_tables.sql
   shell: mysql -uroot -p{{ mysql_root_password }} < /home/vagrant/create_tables.sql
 
+- name: delete create_tables.sql file
+  file: path=/home/vagrant/create_tables.sql state=absent
+
 - name: change user name for advanced features
   lineinfile: dest=/etc/phpmyadmin/config-db.php regexp="dbuser=" line="$dbuser='{{ phpmyadmin_advanced_username }}';" state=present backrefs=yes
 
