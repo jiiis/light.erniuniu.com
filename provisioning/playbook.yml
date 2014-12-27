@@ -15,7 +15,7 @@
     - git
 
   vars:
-    host: light.erniuniu.com
+    host: light.erniuniu.com.local
     dbname: erniuniu
     mysql_root_password: root
     mysql_databases:
