@@ -13,6 +13,7 @@
     - phpmyadmin
     - ssh
     - git
+    - aws
 
   vars:
     host: light.erniuniu.com.local
@@ -30,3 +31,12 @@
     git_user:
         email: yngwie.chang@gmail.com
         name: Hao Chang
+
+  vars_prompt:
+    - name: "s3_user_key"
+      prompt: "The Access Key ID for a AWS user with full S3 access"
+      # private has to be yes here. There is a bug: https://github.com/mitchellh/vagrant/issues/2924
+      private: yes
+    - name: "s3_user_secret"
+      prompt: "The Secret Access Key for the S3 user"
+      private: yes

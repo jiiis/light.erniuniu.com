@@ -1,0 +1,10 @@
+---
+
+- name: make database_backup directory
+  file: path=/home/vagrant/database_backup state=directory group=vagrant owner=vagrant mode=0700
+
+- name: put loadDump.sh
+  template: src=loadDump.sh dest=/home/vagrant/loadDump.sh group=vagrant owner=vagrant mode=0755
+
+- name: put downloadAndLoadDump.sh
+  template: src=downloadAndLoadDump.sh dest=/home/vagrant/downloadAndLoadDump.sh group=vagrant owner=vagrant mode=0755

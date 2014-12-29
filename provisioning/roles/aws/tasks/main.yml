@@ -1,0 +1,15 @@
+---
+
+- name: import s3tools signing key
+  shell: wget -O- -q http://s3tools.org/repo/deb-all/stable/s3tools.key | apt-key add -
+
+- name: add s3tools repo to apt sources.list
+  command: wget -O/etc/apt/sources.list.d/s3tools.list http://s3tools.org/repo/deb-all/stable/s3tools.list
+
+- name: install s3cmd
+  apt: pkg=s3cmd state=latest update_cache=yes cache_valid_time=60
+
+- name: configure s3cmd
+  template: src=.s3cfg dest=/home/vagrant/.s3cfg group=vagrant owner=vagrant mode=0600
+
+- include: db_backup.yml

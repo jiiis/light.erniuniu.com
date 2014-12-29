@@ -1,3 +1,5 @@
+---
+
 - name: load virtualhost
   template: src=sites-available/{{ template }} dest=/etc/apache2/sites-available/{{ vhost }}.conf
   notify: restart apache2
