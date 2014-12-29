@@ -1,6 +1,6 @@
 .idea
 .vagrant
-src/public/images
+src/public/frontend/images
 src/vendor
 provisioning/roles/ssh/.ssh/id_rsa
 **/.DS_Store
