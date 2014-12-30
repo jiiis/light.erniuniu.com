@@ -34,9 +34,17 @@
         name: Hao Chang
 
   vars_prompt:
+    - name: "host_prod"
+      # private has to be yes here. There is a bug: https://github.com/mitchellh/vagrant/issues/2924
+      prompt: "The domain name or IP address of the production host"
+      default: "light.erniuniu.com"
+      private: yes
+    - name: "user_prod"
+      prompt: "The user of the production host"
+      default: "ubuntu"
+      private: yes
     - name: "s3_user_key"
       prompt: "The Access Key ID for a AWS user with full S3 access"
-      # private has to be yes here. There is a bug: https://github.com/mitchellh/vagrant/issues/2924
       private: yes
     - name: "s3_user_secret"
       prompt: "The Secret Access Key for the S3 user"

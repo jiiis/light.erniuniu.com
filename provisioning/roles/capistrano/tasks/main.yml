@@ -2,3 +2,6 @@
 
 - name: install capistrano
   gem: name=capistrano version=3.3.5 state=present
+
+- name: configure the prodcution host
+  lineinfile: dest=/var/www/{{ host }}/config/deploy/production.rb regexp=", roles{{ ':' }} %w{web app}$" line="server '{{ host_prod }}', user{{ ':' }} '{{ user_prod }}', roles{{ ':' }} %w{web app}"

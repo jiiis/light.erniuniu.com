@@ -1,1 +1,1 @@
-server '54.66.177.99', user: 'ubuntu', roles: %w{web app}
+server 'light.erniuniu.com', user: 'ubuntu', roles: %w{web app}
