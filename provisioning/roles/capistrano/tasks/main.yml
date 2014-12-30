@@ -1,7 +1,8 @@
 ---
 
 - name: install capistrano
-  gem: name=capistrano version=3.3.5 state=present
+#  gem: name=capistrano version=3.3.5 state=present user_install=no
+  command: gem install capistrano -v=3.3.5
 
 - name: make config/deploy directory
   file: path=/var/www/{{ host }}/config/deploy state=directory group=dialout owner=501 mode=0755
