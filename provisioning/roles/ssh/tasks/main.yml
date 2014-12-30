@@ -1,10 +1,13 @@
 ---
 
-- name: copy private key
+- name: put private key
   copy: src=../.ssh/id_rsa dest=/home/vagrant/.ssh/id_rsa group=vagrant owner=vagrant mode=0400
 
-- name: copy public key
+- name: put public key
   copy: src=../.ssh/id_rsa.pub dest=/home/vagrant/.ssh/id_rsa.pub group=vagrant owner=vagrant mode=0644
 
-- name: copy configuration file
+- name: put configuration file
   copy: src=../.ssh/config dest=/home/vagrant/.ssh/config group=vagrant owner=vagrant mode=0600
+
+- name: put .profile_profile, starting the authentication agent from the background
+  template: src=.bash_profile dest=/home/vagrant/.bash_profile group=vagrant owner=vagrant mode=0644
