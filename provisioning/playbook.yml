@@ -6,6 +6,7 @@
     - system
     - ntp
     - ruby
+    - capistrano
     - php
     - composer
     - apache
