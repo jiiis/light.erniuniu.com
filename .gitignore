@@ -1,8 +1,13 @@
 **/.DS_Store
+
 .idea
 .vagrant
 .capistrano
+
+config/deploy/production.rb
+
+provisioning/roles/ssh/.ssh/id_rsa
+
 src/public/frontend/images
 src/vendor
 src/config/autoload/database.local.php
-provisioning/roles/ssh/.ssh/id_rsa
