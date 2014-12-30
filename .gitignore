@@ -2,5 +2,6 @@
 .vagrant
 src/public/frontend/images
 src/vendor
+src/config/autoload/database.local.php
 provisioning/roles/ssh/.ssh/id_rsa
 **/.DS_Store
