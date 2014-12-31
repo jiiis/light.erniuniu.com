@@ -1,7 +1,7 @@
 ---
 
 - name: install git
-  apt: pkg=git state=latest update_cache=yes cache_valid_time=60
+  apt: name=git state=latest update_cache=yes cache_valid_time=60
 
 - name: set global user name
   shell: git config --global user.name "{{ git_user.name }}"
