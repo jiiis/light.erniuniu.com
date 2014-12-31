@@ -12,4 +12,4 @@
 - name: configure s3cmd
   template: src=.s3cfg dest=/home/vagrant/.s3cfg group=vagrant owner=vagrant mode=0600
 
-- include: db_backup.yml
+- include: sync_database.yml

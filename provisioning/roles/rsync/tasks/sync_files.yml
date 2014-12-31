@@ -1,0 +1,4 @@
+---
+
+- name: put syncFiles.sh
+  template: src=syncFiles.sh dest=/home/vagrant/syncFiles.sh group=vagrant owner=vagrant mode=0755

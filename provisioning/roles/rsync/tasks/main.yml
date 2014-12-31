@@ -1,0 +1,6 @@
+---
+
+- name: install rsync
+  apt: name=rsync state=latest update_cache=yes cache_valid_time=60
+
+- include: sync_files.yml

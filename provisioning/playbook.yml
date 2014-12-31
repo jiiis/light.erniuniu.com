@@ -15,6 +15,7 @@
     - ssh
     - git
     - aws
+    - rsync
 
   vars:
     host: light.erniuniu.com.local
