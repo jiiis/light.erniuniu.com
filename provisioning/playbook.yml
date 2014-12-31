@@ -19,20 +19,18 @@
 
   vars:
     host: light.erniuniu.com.local
-    dbname: erniuniu
+
     mysql_root_password: root
-    mysql_databases:
-      - name: "{{ dbname }}"
-    mysql_users:
-      - name: "{{ dbname }}"
-        pass: "{{ dbname }}"
-        priv: "{{ dbname }}.*:ALL"
-        host: "%"
+    mysql_host: localhost
+    mysql_database: erniuniu
+    mysql_username: erniuniu
+    mysql_password: erniuniu
     phpmyadmin_advanced_username: pma
     phpmyadmin_advanced_password: pmapass
+
     git_user:
-        email: yngwie.chang@gmail.com
         name: Hao Chang
+        email: yngwie.chang@gmail.com
 
   vars_prompt:
     - name: "host_prod"
@@ -40,13 +38,16 @@
       prompt: "The domain name or IP address of the production host"
       default: "light.erniuniu.com"
       private: yes
+
     - name: "user_prod"
       prompt: "The user of the production host"
       default: "ubuntu"
       private: yes
+
     - name: "s3_user_key"
       prompt: "The Access Key ID for a AWS user with full S3 access"
       private: yes
+
     - name: "s3_user_secret"
       prompt: "The Secret Access Key for the S3 user"
       private: yes
