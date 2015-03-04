@@ -480,7 +480,7 @@ class FrontendController extends AbstractActionController{
         $response = $this->getResponse();
 		
 		if($request->isPost()){
-			$website_domain = "244paddington.com.au"; // 需要改
+			$website_domain = "pantyhose-tights-nylons.com"; // 需要改
 		
 			$shop_info = $this->getBasicInfoTable()->getBasicInfo(1);
 			$to = $shop_info->email;
