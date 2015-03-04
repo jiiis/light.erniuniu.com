@@ -48,7 +48,7 @@ div.growlUI h3, div.growlUI h4 {
 body {
     font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
     height: auto;
-    background: url(/frontend/images/backgrounds/107.jpg);
+    background: url(/frontend/images/patterns/pattern_5.png) #ccc;
 }
 
 div#background {
@@ -673,7 +673,7 @@ div.footer_own {
     padding-top: 20px;
     width: 1000px;
     height: 80px;
-    color: #fff;
+    color: #ccc;
     font-weight: normal;
     font-size: 14px;
     text-align: center;
