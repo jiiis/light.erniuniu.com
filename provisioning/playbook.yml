@@ -16,6 +16,7 @@
     - git
     - aws
     - rsync
+    - mail
 
   vars:
     host: light.erniuniu.com.local

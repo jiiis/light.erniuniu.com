@@ -1,0 +1,4 @@
+---
+
+- name: install sendmail
+  apt: name=sendmail state=present update_cache=yes cache_valid_time=60
